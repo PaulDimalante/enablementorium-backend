@@ -1,8 +1,11 @@
 package com.cognizant.labs.model;
 
+import com.cognizant.labs.model.listener.PersonListener;
+
 import javax.persistence.*;
 
 @Entity
+@EntityListeners(PersonListener.class)
 public class Person {
 
     @Id
