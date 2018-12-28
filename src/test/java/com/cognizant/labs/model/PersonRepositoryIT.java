@@ -6,15 +6,13 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.security.oauth2.common.OAuth2AccessToken;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.web.context.WebApplicationContext;
 
 import java.util.Map;
 
@@ -22,28 +20,29 @@ import static org.junit.Assert.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@AutoConfigureMockMvc
-@ActiveProfiles("test")
+@ActiveProfiles("local")
 public class PersonRepositoryIT {
 
     @Autowired
     PersonRepository personRepository;
 
     @Autowired
+    WebApplicationContext context;
+
     MockMvc mvc;
 
     @Autowired
     ObjectMapper mapper;
 
-    OAuth2AccessToken token;
-
     @Before
     public void before() throws Exception {
         personRepository.deleteAllInBatch();
-        //security
+        //setup
+        mvc = webAppContextSetup(context).build();
     }
 
     @Test
@@ -63,7 +62,7 @@ public class PersonRepositoryIT {
         assertFalse(person.isActive());
     }
 
-    @WithMockUser(roles = {"ADMIN"})
+
     @Test
     public void testRESTSelect() throws Exception {
         //create a person
