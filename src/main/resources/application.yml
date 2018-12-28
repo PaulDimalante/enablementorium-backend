@@ -1,0 +1,15 @@
+---
+spring:
+  profiles: local
+  security:
+    user:
+      password: welcome1
+security:
+  oauth2:
+    resource:
+      token-info-uri: http://localhost:9001/oauth/check_token
+    client:
+      client-id: configserver
+      client-secret: configserversecret
+server:
+  port: 9000
