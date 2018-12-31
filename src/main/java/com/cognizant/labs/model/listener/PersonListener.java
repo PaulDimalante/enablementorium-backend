@@ -13,7 +13,7 @@ public class PersonListener {
     private PublishingService publishingService;
 
     @PostPersist
-    public void postUpdate(Person person) throws Exception {
+    public void postUpdate(Person person) {
         SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
         publishingService.sendUpdate(person);
     }
