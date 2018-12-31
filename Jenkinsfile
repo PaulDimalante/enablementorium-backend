@@ -21,7 +21,7 @@ pipeline {
       steps {
         script {
           try {
-            sh 'gradle clean test'
+            sh './gradlew clean test'
             updateGitlabCommitStatus name: 'unit test', state: 'success'
           } catch (exc) {
             // this is so we can capture the results in 'finally' below
@@ -37,7 +37,7 @@ pipeline {
       steps {
         script {
           try {
-            sh 'gradle clean integrationTest'
+            sh './gradlew clean integrationTest'
             updateGitlabCommitStatus name: 'integration test', state: 'success'
           } catch (exc) {
             // this is so we can capture the results in 'finally' below
@@ -51,7 +51,7 @@ pipeline {
     }
     stage('sonar') {
       steps {
-        sh 'gradle check jacocoTestCoverageVerification sonar -Dsonar.host.url=https://sonar.unreleased.work'
+        sh './gradlew check jacocoTestCoverageVerification sonar -Dsonar.host.url=https://sonar.unreleased.work'
         updateGitlabCommitStatus name: 'sonar', state: 'success'
         acceptGitLabMR()
       }
@@ -62,7 +62,7 @@ pipeline {
       }
       steps {
         withCredentials([usernamePassword(credentialsId: '472bcc5d-035b-44a9-9fda-d6e6a9f22f05', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
-          sh 'gradle -PUSERNAME=$USERNAME -PPASSWORD=$PASSWORD uploadArchives'
+          sh './gradlew -PUSERNAME=$USERNAME -PPASSWORD=$PASSWORD uploadArchives'
         }
         updateGitlabCommitStatus name: 'nexus', state: 'success'
       }
