@@ -17,10 +17,10 @@ pipeline {
         script {
           try {
             sh './gradlew clean test'
-            updateGitlabCommitStatus state: 'unit test'
+            updateGitlabCommitStatus name: 'unit test' state: 'success'
           } catch (exc) {
             // this is so we can capture the results in 'finally' below
-            updateGitlabCommitStatus state: 'unit test failed'
+            updateGitlabCommitStatus name: 'unit test failed' state: 'failed'
               throw exec
           } finally {
             junit '**/build/test-results/test/*.xml'
@@ -33,10 +33,10 @@ pipeline {
         script {
           try {
             sh './gradlew clean integrationTest'
-            updateGitlabCommitStatus state: 'integration test'
+            updateGitlabCommitStatus name: 'integration test' state: 'success'
           } catch (exc) {
             // this is so we can capture the results in 'finally' below
-            updateGitlabCommitStatus state: 'integration test failed'
+            updateGitlabCommitStatus name: 'integration test failed' state: 'failed'
             throw exec
           } finally {
             junit '**/build/test-results/integrationTest/*.xml'
@@ -47,7 +47,7 @@ pipeline {
     stage('sonar') {
       steps {
         sh './gradlew check jacocoTestCoverageVerification sonar -Dsonar.host.url=https://sonar.unreleased.work'
-        updateGitlabCommitStatus state: 'sonar'
+        updateGitlabCommitStatus name: 'sonar' state: 'success'
         acceptGitLabMR()
       }
     }
@@ -59,7 +59,7 @@ pipeline {
         withCredentials([usernamePassword(credentialsId: '472bcc5d-035b-44a9-9fda-d6e6a9f22f05', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
           sh './gradlew -PUSERNAME=$USERNAME -PPASSWORD=$PASSWORD uploadArchives'
         }
-        updateGitlabCommitStatus state: 'nexus'
+        updateGitlabCommitStatus name: 'nexus' state: 'success'
       }
     }
   }
