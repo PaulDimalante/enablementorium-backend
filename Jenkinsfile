@@ -2,7 +2,7 @@ updateGitlabCommitStatus state: 'pending'
 pipeline {
   agent {
     docker {
-      image 'docker.unreleased.work/maven-cf-node-headless:latest'
+      image 'docker.unreleased.work/gradle-cf-node-ng-headless:latest'
       registryUrl 'https://docker.unreleased.work'
       registryCredentialsId 'docker-credentials'
       args '-v /root/.m2:/root/.m2'
