@@ -1,11 +1,14 @@
 plugins {
     id 'java'
     id 'org.springframework.boot' version '2.1.1.RELEASE'
+    id "org.sonarqube" version "2.6.2"
 }
 
 apply plugin: 'java'
 apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
+apply plugin: 'jacoco'
+apply plugin: 'org.sonarqube'
 
 group 'com.cognizant.labs'
 version '1.0-SNAPSHOT'
@@ -18,6 +21,18 @@ repositories {
         url 'http://oss.jfrog.org/artifactory/oss-snapshot-local/'
     }
 }
+
+jacoco {
+    toolVersion = '0.8.1'
+}
+
+sonarqube {
+
+    properties {
+        property "sonar.jacoco.reportPaths", "${buildDir}/jacoco"
+    }
+}
+
 
 test {
     exclude 'com/**/*IT*'
