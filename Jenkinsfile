@@ -12,6 +12,11 @@ pipeline {
     CF = credentials('pws-credentials')
   }
   stages {
+    stage('build') {
+      steps {
+        updateGitlabCommitStatus state: 'running'
+      }
+    }
     stage('unit-test') {
       steps {
         script {
@@ -61,6 +66,17 @@ pipeline {
         }
         updateGitlabCommitStatus name: 'nexus', state: 'success'
       }
+    }
+  }
+  post {
+    always {
+      deleteDir()
+    }
+    success {
+      updateGitlabCommitStatus state: 'success'
+    }
+    failure {
+      updateGitlabCommitStatus state: 'failed'
     }
   }
 }
