@@ -41,7 +41,7 @@ pipeline {
     }
     stage('sonar') {
       steps {
-        sh './gradlew check jacocoTestCoverageVerification sonar -Dsonar.host.url=https://sonar.unreleased.work -Dsonar.branch=${env.BRANCH_NAME}'
+        sh './gradlew check jacocoTestCoverageVerification sonar -Dsonar.host.url=https://sonar.unreleased.work'
       }
     }
     stage('nexus-deliver') {
@@ -52,6 +52,7 @@ pipeline {
         withCredentials([usernamePassword(credentialsId: '472bcc5d-035b-44a9-9fda-d6e6a9f22f05', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
           sh './gradlew -PUSERNAME=$USERNAME -PPASSWORD=$PASSWORD uploadArchives'
         }
+        acceptGitLabMR(true,false)
       }
     }
   }
