@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import org.springframework.data.rest.core.annotation.RestResource;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.transaction.annotation.Transactional;
 
 @RepositoryRestResource(excerptProjection = PersonProjection.class)
@@ -29,6 +30,7 @@ public interface PersonRepository extends JpaRepository<Person,Long> {
     @Override
     void deleteAllInBatch();
 
+    @Secured("ADMIN")
     @RestResource(exported = false)
     @Override
     @Query("update #{#entityName} p set p.active = false where p.id = ?1")

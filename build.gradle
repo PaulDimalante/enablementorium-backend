@@ -1,11 +1,14 @@
 plugins {
     id 'java'
     id 'org.springframework.boot' version '2.1.1.RELEASE'
+    id "org.sonarqube" version "2.6.2"
 }
 
 apply plugin: 'java'
 apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
+apply plugin: 'jacoco'
+apply plugin: 'org.sonarqube'
 
 group 'com.cognizant.labs'
 version '1.0-SNAPSHOT'
@@ -19,10 +22,33 @@ repositories {
     }
 }
 
+jacoco {
+    toolVersion = '0.8.1'
+}
+
+sonarqube {
+
+    properties {
+        property "sonar.jacoco.reportPaths", "${buildDir}/jacoco"
+    }
+}
+
+
+test {
+    exclude 'com/**/*IT*'
+}
+
+task integrationTest(type: Test) {
+    exclude 'com/**/*Test*'
+    include 'com/**/*IT*'
+}
+
 dependencies {
     compile 'org.springframework.boot:spring-boot-starter-actuator'
     compile 'org.springframework.boot:spring-boot-starter-data-jpa'
     compile 'org.springframework.boot:spring-boot-starter-data-rest'
+    compile 'org.springframework.boot:spring-boot-starter-security'
+    compile 'org.springframework.security.oauth.boot:spring-security-oauth2-autoconfigure:2.1.1.RELEASE'
     compile 'org.springframework.hateoas:spring-hateoas'
     compile 'io.springfox:springfox-swagger2:3.0.0-SNAPSHOT'
     compile 'io.springfox:springfox-swagger-ui:3.0.0-SNAPSHOT'
@@ -33,3 +59,4 @@ dependencies {
     testCompile 'org.springframework.boot:spring-boot-starter-test'
     testCompile 'org.springframework.security:spring-security-test'
 }
+

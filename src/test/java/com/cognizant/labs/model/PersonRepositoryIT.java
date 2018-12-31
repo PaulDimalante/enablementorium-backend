@@ -2,21 +2,17 @@ package com.cognizant.labs.model;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockserver.integration.ClientAndServer;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.web.context.WebApplicationContext;
 
 import java.util.Map;
 
@@ -24,17 +20,19 @@ import static org.junit.Assert.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@AutoConfigureMockMvc
-@ActiveProfiles("test")
+@ActiveProfiles("local")
 public class PersonRepositoryIT {
 
     @Autowired
     PersonRepository personRepository;
 
     @Autowired
+    WebApplicationContext context;
+
     MockMvc mvc;
 
     @Autowired
@@ -43,6 +41,8 @@ public class PersonRepositoryIT {
     @Before
     public void before() throws Exception {
         personRepository.deleteAllInBatch();
+        //setup
+        mvc = webAppContextSetup(context).build();
     }
 
     @Test
@@ -62,9 +62,9 @@ public class PersonRepositoryIT {
         assertFalse(person.isActive());
     }
 
+
     @Test
     public void testRESTSelect() throws Exception {
-        //create a person
         //create a person
         Person person = new Person();
         person.setFirstName("john");
