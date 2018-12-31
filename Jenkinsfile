@@ -1,3 +1,4 @@
+updateGitlabCommitStatus state: 'pending'
 pipeline {
   agent {
     docker {
@@ -16,8 +17,10 @@ pipeline {
         script {
           try {
             sh './gradlew clean test'
+            updateGitlabCommitStatus name: 'unit test', state: 'success'
           } catch (exc) {
             // this is so we can capture the results in 'finally' below
+            updateGitlabCommitStatus name: 'unit test failed', state: 'failed'
               throw exec
           } finally {
             junit '**/build/test-results/test/*.xml'
@@ -30,8 +33,10 @@ pipeline {
         script {
           try {
             sh './gradlew clean integrationTest'
+            updateGitlabCommitStatus name: 'integration test', state: 'success'
           } catch (exc) {
             // this is so we can capture the results in 'finally' below
+            updateGitlabCommitStatus name: 'integration test failed', state: 'failed'
             throw exec
           } finally {
             junit '**/build/test-results/integrationTest/*.xml'
@@ -42,6 +47,7 @@ pipeline {
     stage('sonar') {
       steps {
         sh './gradlew check jacocoTestCoverageVerification sonar -Dsonar.host.url=https://sonar.unreleased.work'
+        updateGitlabCommitStatus name: 'sonar', state: 'success'
         acceptGitLabMR()
       }
     }
@@ -53,6 +59,7 @@ pipeline {
         withCredentials([usernamePassword(credentialsId: '472bcc5d-035b-44a9-9fda-d6e6a9f22f05', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
           sh './gradlew -PUSERNAME=$USERNAME -PPASSWORD=$PASSWORD uploadArchives'
         }
+        updateGitlabCommitStatus name: 'nexus', state: 'success'
       }
     }
   }
