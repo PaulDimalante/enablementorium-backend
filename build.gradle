@@ -19,6 +19,10 @@ repositories {
     }
 }
 
+test {
+    exclude 'com/**/*IT*'
+}
+
 dependencies {
     compile 'org.springframework.boot:spring-boot-starter-actuator'
     compile 'org.springframework.boot:spring-boot-starter-data-jpa'
@@ -34,4 +38,9 @@ dependencies {
     testCompile 'org.mock-server:mockserver-client-java:3.10.8'
     testCompile 'org.springframework.boot:spring-boot-starter-test'
     testCompile 'org.springframework.security:spring-security-test'
+}
+
+task integrationTest(type: Test) {
+    exclude 'com/**/*Test*'
+    include 'com/**/*IT*'
 }
