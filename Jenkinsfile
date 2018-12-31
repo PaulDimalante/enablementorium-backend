@@ -2,7 +2,7 @@ updateGitlabCommitStatus state: 'pending'
 pipeline {
   agent {
     docker {
-      image 'docker.unreleased.work/maven-cf-node-headless:latest'
+      image 'docker.unreleased.work/gradle-cf-node-ng-headless:latest'
       registryUrl 'https://docker.unreleased.work'
       registryCredentialsId 'docker-credentials'
       args '-v /root/.m2:/root/.m2'
@@ -12,6 +12,11 @@ pipeline {
     CF = credentials('pws-credentials')
   }
   stages {
+    stage('build') {
+      steps {
+        updateGitlabCommitStatus state: 'running'
+      }
+    }
     stage('unit-test') {
       steps {
         script {
@@ -61,6 +66,17 @@ pipeline {
         }
         updateGitlabCommitStatus name: 'nexus', state: 'success'
       }
+    }
+  }
+  post {
+    always {
+      deleteDir()
+    }
+    success {
+      updateGitlabCommitStatus state: 'success'
+    }
+    failure {
+      updateGitlabCommitStatus state: 'failed'
     }
   }
 }
