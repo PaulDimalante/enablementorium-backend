@@ -41,7 +41,8 @@ pipeline {
     }
     stage('sonar') {
       steps {
-        sh './gradlew check jacocoTestCoverageVerification sonar -Dsonar.host.url=https://sonar.unreleased.work -Dsonar.branch=${env.BRANCH_NAME}'
+        sh './gradlew check jacocoTestCoverageVerification sonar -Dsonar.host.url=https://sonar.unreleased.work'
+        acceptGitLabMR()
       }
     }
     stage('nexus-deliver') {
