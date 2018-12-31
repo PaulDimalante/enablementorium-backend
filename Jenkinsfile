@@ -1,4 +1,3 @@
-#!/usr/bin/env groovy
 pipeline {
   agent {
     docker {
@@ -16,9 +15,7 @@ pipeline {
       steps {
         script {
           try {
-            sh '''
-            ./gradlew clean test
-            '''
+            sh './gradlew clean test'
           } catch (exc) {
             // this is so we can capture the results in 'finally' below
               throw exec
@@ -32,9 +29,7 @@ pipeline {
       steps {
         script {
           try {
-            sh '''
-            ./gradlew clean integrationTest
-            '''
+            sh './gradlew clean integrationTest'
           } catch (exc) {
             // this is so we can capture the results in 'finally' below
             throw exec
@@ -49,15 +44,13 @@ pipeline {
         sh './gradlew check jacocoTestCoverageVerification sonar -Dsonar.host.url=https://sonar.unreleased.work -Dsonar.branch=${env.BRANCH_NAME}'
       }
     }
-    stage('nexus-deliver')
+    stage('nexus-deliver') {
       when {
         branch 'develop'
       }
       steps {
         withCredentials([usernamePassword(credentialsId: '472bcc5d-035b-44a9-9fda-d6e6a9f22f05', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
-          sh '''
-            ./gradlew -PUSERNAME=$USERNAME -PPASSWORD=$PASSWORD uploadArchives
-             '''
+          sh './gradlew -PUSERNAME=$USERNAME -PPASSWORD=$PASSWORD uploadArchives'
         }
       }
     }
