@@ -64,6 +64,8 @@ pipeline {
       }
       steps {
         sh '''
+            $NEXUSCRED_USR
+            $NEXUSCRED_PSW
             ./gradlew -PnexusUsername=$NEXUSCRED_USR -PnexusPassword=$NEXUSCRED_PSW uploadArchives
         '''
         updateGitlabCommitStatus name: 'nexus', state: 'success'
