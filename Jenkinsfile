@@ -65,7 +65,7 @@ pipeline {
         }
       }
       steps {
-        withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: '472bcc5d-035b-44a9-9fda-d6e6a9f22f05', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
+        withCredentials([usernamePassword(credentialsId: '472bcc5d-035b-44a9-9fda-d6e6a9f22f05', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
           sh './gradlew -PUSERNAME=$USERNAME -PPASSWORD=$PASSWORD -x test bootJar uploadArchives'
         }
         updateGitlabCommitStatus name: 'nexus', state: 'success'
