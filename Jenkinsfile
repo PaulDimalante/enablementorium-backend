@@ -59,15 +59,10 @@ pipeline {
     }
     stage('nexus-deliver') {
       when {
-        anyOf {
-            branch 'develop';
-            branch 'master'
-        }
+        branch 'develop'
       }
       steps {
-        withCredentials([usernamePassword(credentialsId: '472bcc5d-035b-44a9-9fda-d6e6a9f22f05', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
-          sh './gradlew -PUSERNAME=$USERNAME -PPASSWORD=$PASSWORD -x test bootJar uploadArchives'
-        }
+        sh './gradlew -PUSERNAME=$NEXUSCRED_USR -PPASSWORD=$NEXUSCRED_PSW uploadArchives'
         updateGitlabCommitStatus name: 'nexus', state: 'success'
       }
     }

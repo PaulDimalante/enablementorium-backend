@@ -47,6 +47,9 @@ uploadArchives {
     }
 }
 
+
+uploadArchives.dependsOn tasks.bootJar
+
 test {
     exclude 'com/**/*IT*'
 }
