@@ -37,16 +37,15 @@ sonarqube {
 uploadArchives {
     repositories {
         mavenDeployer {
-            snapshotRepository(url: 'https://repository.unreleased.work/repository/maven-snapshots/') {
-                authentication(userName: "$USERNAME", password: "$PASSWORD")
+            repository(url: "https://repository.unreleased.work/repository/maven-releases/") {
+                authentication(userName: "$nexusUsername", password: "$nexusPassword")
             }
-            repository(url: 'https://repository.unreleased.work/repository/maven-releases/') {
-                authentication(userName: "$USERNAME", password: "$PASSWORD")
+            snapshotRepository(url: "https://repository.unreleased.work/repository/maven-snapshots/") {
+                authentication(userName: "$nexusUsername", password: "$nexusPassword")
             }
         }
     }
 }
-
 
 uploadArchives.dependsOn tasks.bootJar
 
