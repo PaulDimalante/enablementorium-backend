@@ -38,10 +38,10 @@ uploadArchives {
     repositories {
         mavenDeployer {
             snapshotRepository(url: 'https://repository.unreleased.work/repository/maven-snapshots/') {
-                authentication(userName: "${USERNAME}", password: "${PASSWORD}")
+                authentication(userName: "$USERNAME", password: "$PASSWORD")
             }
             repository(url: 'https://repository.unreleased.work/repository/maven-releases/') {
-                authentication(userName: "${USERNAME}", password: "${PASSWORD}")
+                authentication(userName: "$USERNAME", password: "$PASSWORD")
             }
         }
     }
