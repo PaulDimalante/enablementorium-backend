@@ -34,6 +34,14 @@ sonarqube {
     }
 }
 
+if (!project.hasProperty("nexusUsername")) {
+    ext.nexusUsername = ""
+}
+
+if (!project.hasProperty("nexusPassword")) {
+    ext.nexusPassword = ""
+}
+
 uploadArchives {
     repositories {
         mavenDeployer {
