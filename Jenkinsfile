@@ -53,7 +53,7 @@ pipeline {
     }
     stage('sonar') {
       steps {
-        sh './gradlew check jacocoTestCoverageVerification sonar -Dsonar.host.url=https://sonar.unreleased.work -Dsonar.branch.name=' + env.BRANCH_NAME
+        sh './gradlew check jacocoTestCoverageVerification sonar -Dsonar.host.url=https://sonar.unreleased.work'
         updateGitlabCommitStatus name: 'sonar', state: 'success'
         acceptGitLabMR()
       }
