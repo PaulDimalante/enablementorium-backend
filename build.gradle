@@ -2,6 +2,7 @@ plugins {
     id 'java'
     id 'org.springframework.boot' version '2.1.1.RELEASE'
     id "org.sonarqube" version "2.6.2"
+    id 'net.researchgate.release' version '2.6.0'
 }
 
 apply plugin: 'java'
@@ -9,6 +10,7 @@ apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
 apply plugin: 'jacoco'
 apply plugin: 'org.sonarqube'
+apply plugin: 'maven'
 
 group 'com.cognizant.labs'
 version '1.0-SNAPSHOT'
@@ -27,12 +29,33 @@ jacoco {
 }
 
 sonarqube {
-
     properties {
         property "sonar.jacoco.reportPaths", "${buildDir}/jacoco"
     }
 }
 
+if (!project.hasProperty("nexusUsername")) {
+    ext.nexusUsername = ""
+}
+
+if (!project.hasProperty("nexusPassword")) {
+    ext.nexusPassword = ""
+}
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            repository(url: "https://repository.unreleased.work/repository/maven-releases/") {
+                authentication(userName: "${nexusUsername}", password: "${nexusPassword}")
+            }
+            snapshotRepository(url: "https://repository.unreleased.work/repository/maven-snapshots/") {
+                authentication(userName: "${nexusUsername}", password: "${nexusPassword}")
+            }
+        }
+    }
+}
+
+uploadArchives.dependsOn tasks.bootJar
 
 test {
     exclude 'com/**/*IT*'
@@ -58,5 +81,8 @@ dependencies {
     testCompile 'org.mock-server:mockserver-client-java:3.10.8'
     testCompile 'org.springframework.boot:spring-boot-starter-test'
     testCompile 'org.springframework.security:spring-security-test'
+    testCompile 'org.powermock:powermock-module-junit4:1.7.4'
+    testCompile 'org.powermock:powermock-api-mockito2:1.7.4'
+    testCompile 'org.mockito:mockito-core:2.23.4'
 }
 
