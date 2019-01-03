@@ -2,6 +2,7 @@ plugins {
     id 'java'
     id 'org.springframework.boot' version '2.1.1.RELEASE'
     id "org.sonarqube" version "2.6.2"
+    id 'net.researchgate.release' version '2.6.0'
 }
 
 apply plugin: 'java'
@@ -9,6 +10,7 @@ apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
 apply plugin: 'jacoco'
 apply plugin: 'org.sonarqube'
+apply plugin: 'maven'
 
 group 'com.cognizant.labs'
 version '1.0-SNAPSHOT'
@@ -27,12 +29,23 @@ jacoco {
 }
 
 sonarqube {
-
     properties {
         property "sonar.jacoco.reportPaths", "${buildDir}/jacoco"
     }
 }
 
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            snapshotRepository(url: 'https://repository.unreleased.work/repository/maven-snapshots/') {
+                authentication(userName: "${USERNAME}", password: "${PASSWORD}")
+            }
+            repository(url: 'https://repository.unreleased.work/repository/maven-releases/') {
+                authentication(userName: "${USERNAME}", password: "${PASSWORD}")
+            }
+        }
+    }
+}
 
 test {
     exclude 'com/**/*IT*'
