@@ -10,6 +10,7 @@ pipeline {
   }
   environment {
     CF = credentials('pws-credentials')
+    NEXUSCRED = credentials('472bcc5d-035b-44a9-9fda-d6e6a9f22f05')
   }
   stages {
     stage('build') {
