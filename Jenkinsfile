@@ -1,4 +1,5 @@
 updateGitlabCommitStatus state: 'pending'
+
 pipeline {
   agent {
     docker {
@@ -62,7 +63,9 @@ pipeline {
         branch 'develop'
       }
       steps {
-        sh './gradlew -PnexusUsername=$NEXUSCRED_USR -PnexusPassword=$NEXUSCRED_PSW uploadArchives'
+        sh '''
+            ./gradlew -PnexusUsername=$NEXUSCRED_USR -PnexusPassword=$NEXUSCRED_PSW uploadArchives
+        '''
         updateGitlabCommitStatus name: 'nexus', state: 'success'
       }
     }
