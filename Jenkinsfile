@@ -89,7 +89,7 @@ pipeline {
     }
     stage('nexus-deliver') {
       when {
-        branch 'develop'
+        branch '**/develop'
       }
       steps {
         sh '''
@@ -100,7 +100,7 @@ pipeline {
     }
     stage('deploy-develop') {
       when {
-        branch 'develop'
+        branch '**/develop'
       }
       steps {
         sh '''
