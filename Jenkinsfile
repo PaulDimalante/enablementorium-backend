@@ -49,6 +49,7 @@ pipeline {
       steps {
         script {
           try {
+            sh 'printenv'
             sh './gradlew clean integrationTest'
             updateGitlabCommitStatus name: 'integration test', state: 'success'
           } catch (exc) {
@@ -89,7 +90,7 @@ pipeline {
     }
     stage('nexus-deliver') {
       when {
-        branch '**/develop'
+        branch '*/develop'
       }
       steps {
         sh '''
