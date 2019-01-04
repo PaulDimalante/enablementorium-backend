@@ -20,6 +20,11 @@ pipeline {
       }
     }
     stage('unit-test') {
+      when {
+        not {
+            branch 'master'
+        }
+      }
       steps {
         script {
           try {
@@ -36,6 +41,11 @@ pipeline {
       }
     }
     stage('integration-test') {
+      when {
+        not {
+            branch 'master'
+        }
+      }
       steps {
         script {
           try {
@@ -52,9 +62,16 @@ pipeline {
       }
     }
     stage('sonar') {
+      when {
+        not {
+            branch 'master'
+        }
+      }
       steps {
-        sh './gradlew check jacocoTestCoverageVerification sonar -Dsonar.host.url=https://sonar.unreleased.work'
-        updateGitlabCommitStatus name: 'sonar', state: 'success'
+        withSonarQubeEnv('Sonar_GCP') {
+            sh './gradlew check jacocoTestCoverageVerification sonar -Dsonar.host.url=https://sonar.unreleased.work'
+            updateGitlabCommitStatus name: 'sonar', state: 'success'
+        }
         acceptGitLabMR()
       }
     }
@@ -64,11 +81,31 @@ pipeline {
       }
       steps {
         sh '''
-            $NEXUSCRED_USR
-            $NEXUSCRED_PSW
             ./gradlew -PnexusUsername=$NEXUSCRED_USR -PnexusPassword=$NEXUSCRED_PSW uploadArchives
         '''
         updateGitlabCommitStatus name: 'nexus', state: 'success'
+      }
+    }
+    stage('deploy-develop') {
+      when {
+        branch 'develop'
+      }
+      steps {
+        sh '''
+            ./gradlew cf-push
+        '''
+        updateGitlabCommitStatus name: 'cf-push', state: 'success'
+      }
+    }
+    stage('deploy-master') {
+      when {
+        branch 'master'
+      }
+      steps {
+        sh '''
+            ./gradlew cf-push-blue-green
+        '''
+        updateGitlabCommitStatus name: 'cf-push-production', state: 'success'
       }
     }
   }
