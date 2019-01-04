@@ -75,6 +75,18 @@ pipeline {
         acceptGitLabMR()
       }
     }
+    stage("sonar-qa") {
+      when {
+        not {
+            branch 'master'
+        }
+      }
+      steps {
+        timeout(time: 5, unit: 'MINUTES') {
+          waitForQualityGate abortPipeline: true
+        }
+      }
+    }
     stage('nexus-deliver') {
       when {
         branch 'develop'
