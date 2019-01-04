@@ -18,8 +18,6 @@ version '1.0-SNAPSHOT'
 
 sourceCompatibility = 1.8
 
-
-
 test {
     exclude 'com/**/*IT*'
 }
@@ -48,15 +46,6 @@ sonarqube {
 }
 
 //Archive work #################################
-if (!project.hasProperty("nexusUsername")) {
-    ext.nexusUsername = ""
-}
-
-if (!project.hasProperty("nexusPassword")) {
-    ext.nexusPassword = ""
-}
-
-
 uploadArchives {
     repositories {
         mavenDeployer {
@@ -74,18 +63,6 @@ uploadArchives.dependsOn tasks.bootJar
 
 
 //Cloudfoundry work #################################
-if (!project.hasProperty("ccUser")) {
-    ext.ccUser = "longhorn.cognizant@gmail.com"
-}
-
-if (!project.hasProperty("ccPassword")) {
-    ext.ccPassword = "Ilove2cod#"
-}
-
-if (!project.hasProperty("ccSpace")) {
-    ext.ccSpace = "dev - 1000228994"
-}
-
 //settings
 cfConfig {
     ccHost = "api.run.pivotal.io"

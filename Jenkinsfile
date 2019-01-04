@@ -68,8 +68,10 @@ pipeline {
         }
       }
       steps {
-        sh './gradlew check jacocoTestCoverageVerification sonar -Dsonar.host.url=https://sonar.unreleased.work'
-        updateGitlabCommitStatus name: 'sonar', state: 'success'
+        withSonarQubeEnv('Sonar_GCP') {
+            sh './gradlew check jacocoTestCoverageVerification sonar -Dsonar.host.url=https://sonar.unreleased.work'
+            updateGitlabCommitStatus name: 'sonar', state: 'success'
+        }
         acceptGitLabMR()
       }
     }
