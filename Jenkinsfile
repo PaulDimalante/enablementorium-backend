@@ -108,7 +108,7 @@ pipeline {
       }
       steps {
         sh '''
-            ./gradlew cf-push -PccUser=$CF_USR -PccPassword=$CF_PSW
+            ./gradlew cf-push -PccUser=$CF_USR -PccPassword=$CF_PSW -PccSpace="dev - 1000228994"
         '''
         updateGitlabCommitStatus name: 'cf-push', state: 'success'
       }
