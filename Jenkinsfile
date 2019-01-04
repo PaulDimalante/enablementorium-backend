@@ -21,8 +21,8 @@ pipeline {
     }
     stage('unit-test') {
       when {
-        not {
-            branch 'master'
+        expression {
+            return env.GIT_BRANCH != 'origin/develop'
         }
       }
       steps {
@@ -42,8 +42,8 @@ pipeline {
     }
     stage('integration-test') {
       when {
-        not {
-            branch 'origin/master'
+        expression {
+            return env.GIT_BRANCH != 'origin/develop'
         }
       }
       steps {
@@ -63,8 +63,8 @@ pipeline {
     }
     stage('sonar') {
       when {
-        not {
-            branch 'origin/master'
+        expression {
+            return env.GIT_BRANCH != 'origin/develop'
         }
       }
       steps {
@@ -77,8 +77,8 @@ pipeline {
     }
     stage("sonar-qa") {
       when {
-        not {
-            branch 'origin/master'
+        expression {
+            return env.GIT_BRANCH != 'origin/develop'
         }
       }
       steps {
@@ -89,7 +89,9 @@ pipeline {
     }
     stage('nexus-deliver') {
       when {
-        branch 'origin/develop'
+        expression {
+            return env.GIT_BRANCH == 'origin/develop'
+        }
       }
       steps {
         sh '''
@@ -100,7 +102,9 @@ pipeline {
     }
     stage('deploy-develop') {
       when {
-        branch 'origin/develop'
+        expression {
+            return env.GIT_BRANCH == 'origin/develop'
+        }
       }
       steps {
         sh '''
@@ -111,7 +115,9 @@ pipeline {
     }
     stage('deploy-master') {
       when {
-        branch 'origin/master'
+        expression {
+            return env.GIT_BRANCH == 'origin/master'
+        }
       }
       steps {
         sh '''
