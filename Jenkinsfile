@@ -43,13 +43,12 @@ pipeline {
     stage('integration-test') {
       when {
         not {
-            branch 'master'
+            branch 'origin/master'
         }
       }
       steps {
         script {
           try {
-            sh 'printenv'
             sh './gradlew clean integrationTest'
             updateGitlabCommitStatus name: 'integration test', state: 'success'
           } catch (exc) {
@@ -65,7 +64,7 @@ pipeline {
     stage('sonar') {
       when {
         not {
-            branch 'master'
+            branch 'origin/master'
         }
       }
       steps {
@@ -79,7 +78,7 @@ pipeline {
     stage("sonar-qa") {
       when {
         not {
-            branch 'master'
+            branch 'origin/master'
         }
       }
       steps {
@@ -90,7 +89,7 @@ pipeline {
     }
     stage('nexus-deliver') {
       when {
-        branch '*/develop'
+        branch 'origin/develop'
       }
       steps {
         sh '''
@@ -101,7 +100,7 @@ pipeline {
     }
     stage('deploy-develop') {
       when {
-        branch '**/develop'
+        branch 'origin/develop'
       }
       steps {
         sh '''
@@ -112,7 +111,7 @@ pipeline {
     }
     stage('deploy-master') {
       when {
-        branch 'master'
+        branch 'origin/master'
       }
       steps {
         sh '''
