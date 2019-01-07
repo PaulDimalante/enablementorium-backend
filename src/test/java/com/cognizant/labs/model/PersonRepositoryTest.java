@@ -21,4 +21,16 @@ public class PersonRepositoryTest {
         verify(personRepository,atLeastOnce()).deleteById(any());
     }
 
+    @Test
+    public void testDeletePerson() {
+        Person person = new Person();
+        //mock
+        PersonRepository personRepository = mock(PersonRepository.class);
+        //real
+        doCallRealMethod().when(personRepository).delete(person);
+        //invoke
+        personRepository.delete(person);
+        //verify
+        verify(personRepository,atLeastOnce()).deleteById(any());
+    }
 }
