@@ -22,7 +22,7 @@ pipeline {
     stage('unit-test') {
       when {
         expression {
-            return env.GIT_BRANCH != 'origin/master'
+            return env.GIT_BRANCH != 'origin/develop' && env.GIT_BRANCH != 'origin/master'
         }
       }
       steps {
@@ -43,7 +43,7 @@ pipeline {
     stage('integration-test') {
       when {
         expression {
-            return env.GIT_BRANCH != 'origin/master'
+            return env.GIT_BRANCH != 'origin/develop' && env.GIT_BRANCH != 'origin/master'
         }
       }
       steps {
@@ -64,7 +64,7 @@ pipeline {
     stage('sonar') {
       when {
         expression {
-            return env.GIT_BRANCH != 'origin/master'
+            return env.GIT_BRANCH != 'origin/develop' && env.GIT_BRANCH != 'origin/master'
         }
       }
       steps {
@@ -78,7 +78,7 @@ pipeline {
     stage("sonar-qa") {
       when {
         expression {
-            return env.GIT_BRANCH != 'origin/master'
+            return env.GIT_BRANCH != 'origin/develop' && env.GIT_BRANCH != 'origin/master'
         }
       }
       steps {
@@ -108,7 +108,7 @@ pipeline {
       }
       steps {
         sh '''
-            ./gradlew cf-push -PccUser=$CF_USR -PccPassword=$CF_PSW -PccSpace="dev - 1000228994"
+            ./gradlew -PccUser=$CF_USR -PccPassword=$CF_PSW -PccSpace="dev - 1000228994" cf-push
         '''
         updateGitlabCommitStatus name: 'cf-push', state: 'success'
       }
