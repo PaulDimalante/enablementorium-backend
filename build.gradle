@@ -67,10 +67,10 @@ uploadArchives.dependsOn tasks.bootJar
 //settings
 cfConfig {
     ccHost = "api.run.pivotal.io"
-    ccUser = "${ccUser}"
-    ccPassword = "${ccPassword}"
+    ccUser = project.getProperty('CF_USR')
+    ccPassword = project.getProperty('CF_PSW')
     org = "cognizantlabs"
-    space = "${ccSpace}"
+    space = project.getProperty('CF_SPACE')
     name = rootProject.name
     filePath = "build/libs/" + bootJar.archiveName
     path = ""
