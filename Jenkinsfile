@@ -22,7 +22,7 @@ pipeline {
     stage('unit-test') {
       when {
         expression {
-            return env.GIT_BRANCH != 'origin/develop'
+            return env.GIT_BRANCH != 'origin/master'
         }
       }
       steps {
@@ -43,7 +43,7 @@ pipeline {
     stage('integration-test') {
       when {
         expression {
-            return env.GIT_BRANCH != 'origin/develop'
+            return env.GIT_BRANCH != 'origin/master'
         }
       }
       steps {
@@ -64,7 +64,7 @@ pipeline {
     stage('sonar') {
       when {
         expression {
-            return env.GIT_BRANCH != 'origin/develop'
+            return env.GIT_BRANCH != 'origin/master'
         }
       }
       steps {
@@ -78,7 +78,7 @@ pipeline {
     stage("sonar-qa") {
       when {
         expression {
-            return env.GIT_BRANCH != 'origin/develop'
+            return env.GIT_BRANCH != 'origin/master'
         }
       }
       steps {
