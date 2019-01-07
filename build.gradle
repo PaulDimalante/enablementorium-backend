@@ -20,6 +20,7 @@ sourceCompatibility = 1.8
 
 test {
     exclude 'com/**/*IT*'
+    exclude 'com/**/SmokeTest*'
 }
 
 task integrationTest(type: Test) {
@@ -66,10 +67,10 @@ uploadArchives.dependsOn tasks.bootJar
 //settings
 cfConfig {
     ccHost = "api.run.pivotal.io"
-    ccUser = "${ccUser}"
-    ccPassword = "${ccPassword}"
+    ccUser = project.getProperty('CF_USR')
+    ccPassword = project.getProperty('CF_PSW')
     org = "cognizantlabs"
-    space = "${ccSpace}"
+    space = project.getProperty('CF_SPACE')
     name = rootProject.name
     filePath = "build/libs/" + bootJar.archiveName
     path = ""
@@ -113,6 +114,7 @@ dependencies {
     testCompile 'org.powermock:powermock-module-junit4:1.7.4'
     testCompile 'org.powermock:powermock-api-mockito2:1.7.4'
     testCompile 'org.mockito:mockito-core:2.23.4'
+    testCompile 'org.apache.httpcomponents:httpclient'
 }
 
 
