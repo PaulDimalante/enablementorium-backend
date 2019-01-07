@@ -100,6 +100,19 @@ pipeline {
         updateGitlabCommitStatus name: 'nexus', state: 'success'
       }
     }
+    stage('release') {
+      when {
+        expression {
+            return env.GIT_BRANCH == 'origin/master'
+        }
+      }
+      steps {
+        sh '''
+            ./gradlew -PnexusUsername=$NEXUSCRED_USR -PnexusPassword=$NEXUSCRED_PSW uploadArchives release
+        '''
+        updateGitlabCommitStatus name: 'nexus', state: 'success'
+      }
+    }
     stage('deploy-develop') {
       when {
         expression {
@@ -121,7 +134,7 @@ pipeline {
       }
       steps {
         sh '''
-            ./gradlew cf-push-blue-green
+            ./gradlew -PCF_USR=$CF_USR -PCF_PSW=$CF_PSW -PCF_SPACE="dev - 1000228994" cf-push-blue-green
         '''
         updateGitlabCommitStatus name: 'cf-push-production', state: 'success'
       }
