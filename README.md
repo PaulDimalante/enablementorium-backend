@@ -24,6 +24,7 @@ trigger
 ## Set up Jenkins Webhooks In Gitlab
  
  - From your Gitlab Repo, go to 'Settings -> Integrations'
-    - Create a new 'Merge Request Event' (uncheck push event)
-    - For the URL, get from your Jenkins pipeline: 'Build when a change is pushed to GitLab. GitLab webhook URL: *<your url>*'
-    - For the Secret Token, click the advanced tab under Build Triggers, and scroll down to secret token.
+    - Create a new 'Merge Request Event' by selecting from the checkbox (uncheck push event)
+    - For the URL, get from your Jenkins project under Configure
+        - Look for where it says 'Build when a change is pushed to GitLab. GitLab webhook URL:' `<yoururl@example.com>` This is your URL
+    - For the Secret Token, click the advanced tab under Build Triggers, and scroll down to secret token. This is your Token
