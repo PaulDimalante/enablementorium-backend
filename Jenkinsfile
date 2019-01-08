@@ -72,7 +72,6 @@ pipeline {
             sh './gradlew check jacocoTestCoverageVerification sonar -Dsonar.host.url=https://sonar.unreleased.work'
             updateGitlabCommitStatus name: 'sonar', state: 'success'
         }
-        acceptGitLabMR()
       }
     }
     stage("sonar-qa") {
@@ -85,6 +84,7 @@ pipeline {
         timeout(time: 5, unit: 'MINUTES') {
           waitForQualityGate abortPipeline: true
         }
+        acceptGitLabMR()
       }
     }
     stage('nexus-deliver') {
