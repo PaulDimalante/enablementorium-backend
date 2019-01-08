@@ -1,3 +1,5 @@
+[![pipeline status](https://git.unreleased.work/labs-dallas/sample-apps/reference-ms-crud/badges/master/pipeline.svg)](https://git.unreleased.work/labs-dallas/sample-apps/reference-ms-crud/commits/master)
+
 # Reference MS Crud
 
 Simple reference architecture supporting Spring Data REST for CRUD
