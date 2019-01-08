@@ -9,6 +9,9 @@ pipeline {
       args '-v /root/.m2:/root/.m2'
     }
   }
+    options {
+      gitLabConnection('gitlab')
+    }
   environment {
     CF = credentials('pws-credentials')
     NEXUSCRED = credentials('472bcc5d-035b-44a9-9fda-d6e6a9f22f05')
@@ -22,7 +25,7 @@ pipeline {
     stage('unit-test') {
       when {
         expression {
-            return env.GIT_BRANCH != 'origin/develop' && env.GIT_BRANCH != 'origin/master'
+            return env.GIT_BRANCH != 'origin/master'
         }
       }
       steps {
@@ -43,7 +46,7 @@ pipeline {
     stage('integration-test') {
       when {
         expression {
-            return env.GIT_BRANCH != 'origin/develop' && env.GIT_BRANCH != 'origin/master'
+            return env.GIT_BRANCH != 'origin/master'
         }
       }
       steps {
@@ -64,7 +67,7 @@ pipeline {
     stage('sonar') {
       when {
         expression {
-            return env.GIT_BRANCH != 'origin/develop' && env.GIT_BRANCH != 'origin/master'
+            return env.GIT_BRANCH != 'origin/master'
         }
       }
       steps {
@@ -77,7 +80,7 @@ pipeline {
     stage("sonar-qa") {
       when {
         expression {
-            return env.GIT_BRANCH != 'origin/develop' && env.GIT_BRANCH != 'origin/master'
+            return env.GIT_BRANCH != 'origin/master'
         }
       }
       steps {
