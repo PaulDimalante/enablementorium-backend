@@ -90,6 +90,18 @@ pipeline {
         acceptGitLabMR()
       }
     }
+    stage("sonar-qa") {
+      when {
+        expression {
+            return env.GIT_BRANCH != 'origin/develop' && env.GIT_BRANCH != 'origin/master'
+        }
+      }
+      steps {
+        timeout(time: 5, unit: 'MINUTES') {
+          waitForQualityGate abortPipeline: true
+        }
+      }
+    }
     stage('nexus-deliver') {
       when {
         expression {

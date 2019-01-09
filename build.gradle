@@ -14,7 +14,7 @@ apply plugin: 'org.sonarqube'
 apply plugin: 'maven'
 
 group 'com.cognizant.labs'
-version '1.0-SNAPSHOT'
+version = project.properties.containsKey("releaseVersion") ? "${releaseVersion}" : "1.0-SNAPSHOT"
 
 sourceCompatibility = 1.8
 
