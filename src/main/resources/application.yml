@@ -1,3 +1,11 @@
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: ${vcap.services.eureka.credentials.url:http://localhost:8761/eureka/}
+  instance:
+    hostname: ${vcap.application.uris[0]:test}
+    nonSecurePort: 80
+
 ---
 spring:
   profiles: local
@@ -13,3 +21,6 @@ security:
       client-secret: configserversecret
 server:
   port: 9000
+eureka:
+  client:
+    register-with-eureka: false
