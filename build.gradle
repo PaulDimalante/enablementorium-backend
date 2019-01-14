@@ -2,7 +2,6 @@ plugins {
     id 'java'
     id 'org.springframework.boot' version '2.1.1.RELEASE'
     id "org.sonarqube" version "2.7"
-    id 'net.researchgate.release' version '2.6.0'
     id "com.github.pivotalservices.cf-app" version "2.3.0-rc.6"
 }
 
@@ -32,6 +31,15 @@ repositories {
     mavenCentral()
     maven {
         url 'http://oss.jfrog.org/artifactory/oss-snapshot-local/'
+    }
+    maven {
+        url 'http://repo.spring.io/milestone'
+    }
+}
+
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:Greenwich.RC2"
     }
 }
 
@@ -86,13 +94,13 @@ cfConfig {
 
 "cf-push-blue-green-1" { dependsOn "bootJar" finalizedBy "acceptanceTest" }
 
-
 dependencies {
     compile 'org.springframework.boot:spring-boot-starter-actuator'
     compile 'org.springframework.boot:spring-boot-starter-data-jpa'
     compile 'org.springframework.boot:spring-boot-starter-data-rest'
     compile 'org.springframework.boot:spring-boot-starter-security'
     compile 'org.springframework.security.oauth.boot:spring-security-oauth2-autoconfigure:2.1.1.RELEASE'
+    compile 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
     compile 'org.springframework.hateoas:spring-hateoas'
     compile 'io.springfox:springfox-swagger2:3.0.0-SNAPSHOT'
     compile 'io.springfox:springfox-swagger-ui:3.0.0-SNAPSHOT'
