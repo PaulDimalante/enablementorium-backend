@@ -1,5 +1,6 @@
 package com.cognizant.labs.model;
 
+import com.cognizant.labs.model.converter.StringEncryptor;
 import com.cognizant.labs.model.listener.PersonListener;
 
 import javax.persistence.*;
@@ -12,6 +13,8 @@ public class Person {
     @GeneratedValue(strategy= GenerationType.AUTO)
     private Long id;
 
+    @Column
+    @Convert(converter = StringEncryptor.class)
     private String firstName;
 
     private String lastName;

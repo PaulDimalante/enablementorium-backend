@@ -1,0 +1,5 @@
+---
+spring:
+  profiles: test
+encryption:
+  key: test123456781234
