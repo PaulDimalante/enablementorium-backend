@@ -13,7 +13,7 @@ import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@ActiveProfiles("local")
+@ActiveProfiles({"local","test"})
 public class ApplicationLocalProfileIT {
 
     @Autowired

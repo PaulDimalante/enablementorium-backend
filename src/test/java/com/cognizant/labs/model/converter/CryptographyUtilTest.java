@@ -12,19 +12,20 @@ import static org.junit.Assert.*;
 @RunWith(PowerMockRunner.class)
 public class CryptographyUtilTest {
 
-    @Test
-    public void testInitializeCipher() throws Exception {
-        CryptographyUtil util = new CryptographyUtil();
-        MemberModifier.field(CryptographyUtil.class,"key").set(util,"test123456781234");
-        Cipher cipher = util.initializeCipher(Cipher.ENCRYPT_MODE);//16 byte key
-        assertNotNull(cipher);
-    }
+//    @Test
+//    public void testInitializeCipher() throws Exception {
+//        CryptographyUtil util = new CryptographyUtil();
+//        MemberModifier.field(CryptographyUtil.class,"key").set(util,"test123456781234");
+//        Cipher cipher = util.initializeCipher(Cipher.ENCRYPT_MODE);//16 byte key
+//        assertNotNull(cipher);
+//    }
 
     @Test
     public void testEncrypt() throws Exception {
         CryptographyUtil util = new CryptographyUtil();
         MemberModifier.field(CryptographyUtil.class,"key").set(util,"test123456781234");
-        String encrypted = util.encrypt(util.initializeCipher(Cipher.ENCRYPT_MODE),"hello");
+        util.init();
+        String encrypted = util.encrypt("hello");
         assertNotNull(encrypted);
         assertTrue(encrypted.length() > "hello".length());
     }
@@ -33,11 +34,12 @@ public class CryptographyUtilTest {
     public void testDecrypt() throws Exception {
         CryptographyUtil util = new CryptographyUtil();
         MemberModifier.field(CryptographyUtil.class,"key").set(util,"test123456781234");
-        String encrypted = util.encrypt(util.initializeCipher(Cipher.ENCRYPT_MODE),"hello");
+        util.init();
+        String encrypted = util.encrypt("hello");
         assertNotNull(encrypted);
         assertTrue(encrypted.length() > "hello".length());
         //now decrypt it
-        String result = util.decrypt(util.initializeCipher(Cipher.DECRYPT_MODE),encrypted);
+        String result = util.decrypt(encrypted);
         assertEquals(result,"hello");
     }
 }

@@ -1,6 +1,5 @@
 package com.cognizant.labs.model.converter;
 
-import com.netflix.discovery.converters.Auto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
@@ -30,8 +29,7 @@ public class StringEncryptor implements AttributeConverter<String,String> {
         if (isNotEmpty(attribute)) {
             //encrypt
             SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
-            Cipher cipher = cryptographyUtil.initializeCipher(Cipher.ENCRYPT_MODE);
-            return cryptographyUtil.encrypt(cipher,attribute);
+            return cryptographyUtil.encrypt(attribute);
         }//end if
         return null;//continue
     }
@@ -42,8 +40,7 @@ public class StringEncryptor implements AttributeConverter<String,String> {
         if (isNotEmpty(dbData)) {
             //encrypt
             SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
-            Cipher cipher = cryptographyUtil.initializeCipher(Cipher.DECRYPT_MODE);
-            return cryptographyUtil.decrypt(cipher,dbData);
+            return cryptographyUtil.decrypt(dbData);
         }//end if
         return null;
     }

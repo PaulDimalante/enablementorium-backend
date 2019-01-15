@@ -3,13 +3,12 @@ package com.cognizant.labs.model.converter;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.springframework.util.Assert;
 
+import javax.annotation.PostConstruct;
 import javax.crypto.*;
 import javax.crypto.spec.SecretKeySpec;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
-import java.security.NoSuchProviderException;
-import java.security.Security;
+import java.security.*;
 import java.util.Base64;
 
 @Component
@@ -23,10 +22,30 @@ public class CryptographyUtil {
     private String key;
 
     static {
-        Security.addProvider(new BouncyCastleProvider());
+        boolean hasBC = false;
+        for (Provider provider : Security.getProviders()) {
+            if (provider.getName().equals(new BouncyCastleProvider().getName())) {
+                hasBC = true;
+                break;
+            }//end if
+        }//end for
+        if (!hasBC) {
+            Security.addProvider(new BouncyCastleProvider());
+        }//end if
     }
 
-    public Cipher initializeCipher(int encryptionMode) {
+    private Cipher encryptCipher;
+
+    private Cipher decryptCipher;
+
+    @PostConstruct
+    public void init() {
+        Assert.notNull(key,"No Key has been set");
+        this.encryptCipher = initializeCipher(Cipher.ENCRYPT_MODE);
+        this.decryptCipher = initializeCipher(Cipher.DECRYPT_MODE);
+    }
+
+    protected Cipher initializeCipher(int encryptionMode) {
         Cipher cipher = null;
         try {
             cipher = Cipher.getInstance(CIPHER_INSTANCE_NAME, PROVIDER);
@@ -44,11 +63,11 @@ public class CryptographyUtil {
         return cipher;
     }
 
-    public String encrypt(Cipher cipher, String attribute) {
+    public String encrypt(String attribute) {
         byte[] bytesToEncrypt = attribute.getBytes();
         byte[] encryptedBytes = new byte[0];
         try {
-            encryptedBytes = callCipherDoFinal(cipher, bytesToEncrypt);
+            encryptedBytes = callCipherDoFinal(encryptCipher, bytesToEncrypt);
         } catch (IllegalBlockSizeException e) {
             e.printStackTrace();
         } catch (BadPaddingException e) {
@@ -57,11 +76,11 @@ public class CryptographyUtil {
         return Base64.getEncoder().encodeToString(encryptedBytes);
     }
 
-    public String decrypt(Cipher cipher, String dbData) {
+    public String decrypt(String dbData) {
         byte[] encryptedBytes = Base64.getDecoder().decode(dbData);
         byte[] decryptedBytes = new byte[0];
         try {
-            decryptedBytes = callCipherDoFinal(cipher, encryptedBytes);
+            decryptedBytes = callCipherDoFinal(decryptCipher, encryptedBytes);
         } catch (IllegalBlockSizeException e) {
             e.printStackTrace();
         } catch (BadPaddingException e) {
