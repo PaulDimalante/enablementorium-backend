@@ -1,20 +1,24 @@
 package com.cognizant.labs.model.converter;
 
+import org.apache.juli.logging.Log;
+import org.apache.juli.logging.LogFactory;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import org.springframework.util.Assert;
 
-import javax.annotation.PostConstruct;
 import javax.crypto.*;
+import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 import java.security.*;
+import java.security.spec.AlgorithmParameterSpec;
 import java.util.Base64;
 
 @Component
 public class CryptographyUtil {
 
-    private static final String CIPHER_INSTANCE_NAME = "AES/ECB/PKCS5Padding";
+    private static final Log logger = LogFactory.getLog(CryptographyUtil.class);
+
+    private static final String CIPHER_INSTANCE_NAME = "AES/CBC/PKCS5Padding";
     private static final String SECRET_KEY_ALGORITHM = "AES";
     private static final String PROVIDER = "BC";
 
@@ -34,31 +38,17 @@ public class CryptographyUtil {
         }//end if
     }
 
-    private Cipher encryptCipher;
+    private Cipher cipher;
 
-    private Cipher decryptCipher;
-
-    @PostConstruct
-    public void init() {
-        Assert.notNull(key,"No Key has been set");
-        this.encryptCipher = initializeCipher(Cipher.ENCRYPT_MODE);
-        this.decryptCipher = initializeCipher(Cipher.DECRYPT_MODE);
-    }
-
-    protected Cipher initializeCipher(int encryptionMode) {
-        Cipher cipher = null;
+    protected Cipher getCipher(int encryptionMode) {
         try {
             cipher = Cipher.getInstance(CIPHER_INSTANCE_NAME, PROVIDER);
             SecretKey secretKey = new SecretKeySpec(key.getBytes(), SECRET_KEY_ALGORITHM);
-            cipher.init(encryptionMode, secretKey);
-        } catch (InvalidKeyException e) {
-            e.printStackTrace();
-        } catch (NoSuchPaddingException e) {
-            e.printStackTrace();
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        } catch (NoSuchProviderException e) {
-            e.printStackTrace();
+            AlgorithmParameterSpec algorithmParameters = getAlgorithmParameterSpec(cipher);
+
+            cipher.init(encryptionMode, secretKey,algorithmParameters);
+        } catch (InvalidKeyException | NoSuchPaddingException | NoSuchAlgorithmException | NoSuchProviderException | InvalidAlgorithmParameterException e) {
+            logger.error(e);
         }
         return cipher;
     }
@@ -67,11 +57,9 @@ public class CryptographyUtil {
         byte[] bytesToEncrypt = attribute.getBytes();
         byte[] encryptedBytes = new byte[0];
         try {
-            encryptedBytes = callCipherDoFinal(encryptCipher, bytesToEncrypt);
-        } catch (IllegalBlockSizeException e) {
-            e.printStackTrace();
-        } catch (BadPaddingException e) {
-            e.printStackTrace();
+            encryptedBytes = callCipherDoFinal(getCipher(Cipher.ENCRYPT_MODE), bytesToEncrypt);
+        } catch (IllegalBlockSizeException | BadPaddingException e) {
+            logger.error(e);
         }
         return Base64.getEncoder().encodeToString(encryptedBytes);
     }
@@ -80,16 +68,23 @@ public class CryptographyUtil {
         byte[] encryptedBytes = Base64.getDecoder().decode(dbData);
         byte[] decryptedBytes = new byte[0];
         try {
-            decryptedBytes = callCipherDoFinal(decryptCipher, encryptedBytes);
-        } catch (IllegalBlockSizeException e) {
-            e.printStackTrace();
-        } catch (BadPaddingException e) {
-            e.printStackTrace();
+            decryptedBytes = callCipherDoFinal(getCipher(Cipher.DECRYPT_MODE), encryptedBytes);
+        } catch (IllegalBlockSizeException | BadPaddingException e) {
+            logger.error(e);
         }
         return new String(decryptedBytes);
     }
 
     private byte[] callCipherDoFinal(Cipher cipher, byte[] bytes) throws IllegalBlockSizeException, BadPaddingException {
         return cipher.doFinal(bytes);
+    }
+
+    int getCipherBlockSize(Cipher cipher) {
+        return cipher.getBlockSize();
+    }
+
+    private AlgorithmParameterSpec getAlgorithmParameterSpec(Cipher cipher) {
+        byte[] iv = new byte[getCipherBlockSize(cipher)];
+        return new IvParameterSpec(iv);
     }
 }

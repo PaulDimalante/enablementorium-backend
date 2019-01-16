@@ -1,5 +1,6 @@
 package com.cognizant.labs.model.converter;
 
+import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -14,19 +15,15 @@ import static org.junit.Assert.*;
 @RunWith(PowerMockRunner.class)
 public class CryptographyUtilTest {
 
-//    @Test
-//    public void testInitializeCipher() throws Exception {
-//        CryptographyUtil util = new CryptographyUtil();
-//        MemberModifier.field(CryptographyUtil.class,"key").set(util,"test123456781234");
-//        Cipher cipher = util.initializeCipher(Cipher.ENCRYPT_MODE);//16 byte key
-//        assertNotNull(cipher);
-//    }
+    CryptographyUtil util = new CryptographyUtil();
+
+    @Before
+    public void before() throws Exception {
+        MemberModifier.field(CryptographyUtil.class,"key").set(util,"test123456781234");
+    }
 
     @Test
     public void testEncrypt() throws Exception {
-        CryptographyUtil util = new CryptographyUtil();
-        MemberModifier.field(CryptographyUtil.class,"key").set(util,"test123456781234");
-        util.init();
         String encrypted = util.encrypt("hello");
         assertNotNull(encrypted);
         assertTrue(encrypted.length() > "hello".length());
@@ -34,9 +31,6 @@ public class CryptographyUtilTest {
 
     @Test
     public void testDecrypt() throws Exception {
-        CryptographyUtil util = new CryptographyUtil();
-        MemberModifier.field(CryptographyUtil.class,"key").set(util,"test123456781234");
-        util.init();
         String encrypted = util.encrypt("hello");
         assertNotNull(encrypted);
         assertTrue(encrypted.length() > "hello".length());

@@ -3,7 +3,6 @@ package com.cognizant.labs.model.converter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
-import javax.crypto.Cipher;
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
 
@@ -14,15 +13,6 @@ public class StringEncryptor implements AttributeConverter<String,String> {
 
     @Autowired
     private CryptographyUtil cryptographyUtil;
-
-    public StringEncryptor() {
-        this(new CryptographyUtil());
-    }
-
-    public StringEncryptor(CryptographyUtil cryptographyUtil) {
-        this.cryptographyUtil = cryptographyUtil;
-    }
-
     @Override
     public String convertToDatabaseColumn(String attribute) {
         //check the attribute exists
