@@ -1,5 +1,6 @@
 package com.cognizant.labs.model.converter;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.api.support.membermodification.MemberModifier;
@@ -9,6 +10,7 @@ import javax.crypto.Cipher;
 
 import static org.junit.Assert.*;
 
+@Ignore
 @RunWith(PowerMockRunner.class)
 public class CryptographyUtilTest {
 
