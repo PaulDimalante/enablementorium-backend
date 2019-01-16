@@ -10,8 +10,6 @@ microservices
 <<<<<<< HEAD
 gitlab
 =======
-trigger
-
 ## Set up your project on Jenkins
 
 - Go to Jenkins.unreleased.work
