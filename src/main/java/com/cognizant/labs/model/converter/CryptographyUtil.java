@@ -5,42 +5,24 @@ import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.juli.logging.Log;
 import org.apache.juli.logging.LogFactory;
-import org.bouncycastle.crypto.BufferedBlockCipher;
 import org.bouncycastle.crypto.CipherParameters;
 import org.bouncycastle.crypto.InvalidCipherTextException;
 import org.bouncycastle.crypto.engines.AESEngine;
-import org.bouncycastle.crypto.modes.CBCBlockCipher;
 import org.bouncycastle.crypto.modes.GCMBlockCipher;
-import org.bouncycastle.crypto.paddings.BlockCipherPadding;
-import org.bouncycastle.crypto.paddings.PKCS7Padding;
-import org.bouncycastle.crypto.paddings.PaddedBufferedBlockCipher;
 import org.bouncycastle.crypto.params.KeyParameter;
 import org.bouncycastle.crypto.params.ParametersWithIV;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import javax.crypto.*;
-import javax.crypto.spec.IvParameterSpec;
-import javax.crypto.spec.PBEKeySpec;
-import javax.crypto.spec.SecretKeySpec;
-import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
-import java.security.*;
-import java.security.spec.AlgorithmParameterSpec;
-import java.security.spec.InvalidKeySpecException;
-import java.security.spec.KeySpec;
-import java.util.Base64;
-import java.util.Random;
+import java.security.Provider;
+import java.security.Security;
 
 
 @Component("crypto")
 public class CryptographyUtil {
     private static final Log logger = LogFactory.getLog(CryptographyUtil.class);
-
-    private static final String CIPHER_INSTANCE_NAME = "AES/CBC/PKCS5Padding";
-    private static final String SECRET_KEY_ALGORITHM = "AES";
-    private static final String PROVIDER = "BC";
 
     @Value("${encryption.key}")
     private String key;
@@ -48,33 +30,18 @@ public class CryptographyUtil {
     @Value("${encryption.iv}")
     private String iv;
 
-    static {
-        boolean hasBC = false;
-        for (Provider provider : Security.getProviders()) {
-            if (provider.getName().equals(new BouncyCastleProvider().getName())) {
-                hasBC = true;
-                break;
-            }//end if
-        }//end for
-        if (!hasBC) {
-            Security.addProvider(new BouncyCastleProvider());
-        }//end if
-    }
-
-    private Cipher cipher;
-
-    protected Cipher getCipher(int encryptionMode) {
-        try {
-            cipher = Cipher.getInstance(CIPHER_INSTANCE_NAME, PROVIDER);
-            SecretKey secretKey = new SecretKeySpec(key.getBytes(), SECRET_KEY_ALGORITHM);
-            AlgorithmParameterSpec algorithmParameters = getAlgorithmParameterSpec(cipher);
-
-            cipher.init(encryptionMode, secretKey,algorithmParameters);
-        } catch (InvalidKeyException | NoSuchPaddingException | NoSuchAlgorithmException | NoSuchProviderException | InvalidAlgorithmParameterException e) {
-            logger.error(e);
-        }
-        return cipher;
-    }
+//    static {
+//        boolean hasBC = false;
+//        for (Provider provider : Security.getProviders()) {
+//            if (provider.getName().equals(new BouncyCastleProvider().getName())) {
+//                hasBC = true;
+//                break;
+//            }//end if
+//        }//end for
+//        if (!hasBC) {
+//            Security.addProvider(new BouncyCastleProvider());
+//        }//end if
+//    }
 
     public String encrypt(String attribute)  {
         final byte [] info_plaintext = attribute.getBytes();
@@ -113,19 +80,6 @@ public class CryptographyUtil {
             return null;
         }
 
-    }
-
-    private byte[] callCipherDoFinal(Cipher cipher, byte[] bytes) throws IllegalBlockSizeException, BadPaddingException {
-        return cipher.doFinal(bytes);
-    }
-
-    int getCipherBlockSize(Cipher cipher) {
-        return cipher.getBlockSize();
-    }
-
-    private AlgorithmParameterSpec getAlgorithmParameterSpec(Cipher cipher) {
-        byte[] iv = new byte[getCipherBlockSize(cipher)];
-        return new IvParameterSpec(iv);
     }
 
 }
