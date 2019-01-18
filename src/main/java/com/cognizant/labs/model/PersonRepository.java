@@ -6,6 +6,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import org.springframework.data.rest.core.annotation.RestResource;
 import org.springframework.security.access.annotation.Secured;
@@ -57,5 +58,6 @@ public interface PersonRepository extends JpaRepository<Person,Long> {
     @Override
     void deleteAll();
 
-    List<Person> findByFirstName(String john);
+//    @Query("select p from Person p where p.firstName = ?#{@crypto.encrypt(#firstName)}")
+    List<Person> findByFirstName(@Param("firstName") String firstName);
 }

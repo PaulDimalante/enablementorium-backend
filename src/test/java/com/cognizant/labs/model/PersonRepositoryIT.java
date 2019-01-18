@@ -16,6 +16,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.web.context.WebApplicationContext;
 
 import javax.sql.DataSource;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -109,31 +110,36 @@ public class PersonRepositoryIT {
         String firstName = jdbcTemplate.queryForObject("select p.first_name from person p where p.id = " + person.getId(),String.class);
         assertFalse(firstName.equalsIgnoreCase("john"));
         assertTrue(firstName.length() > "john".length());
+        System.out.println(firstName);
     }
 
     @Test
     public void testEncryptedSearch() throws Exception {
+        String firstName = "john";
+        List<Person> persons = new ArrayList<>();
         //persist a value
         Person person = new Person();
-        person.setFirstName("john");
+        person.setFirstName(firstName);
+        persons.add(person);
         //save
-        personRepository.save(person);
+//        personRepository.save(person);
         //save another one
         person = new Person();
         person.setFirstName("jane");
+        persons.add(person);
         //save
-        personRepository.save(person);
+        personRepository.saveAll(persons);
         //get the baseline
-        List<Person> persons = personRepository.findAll();
+        persons = personRepository.findAll();
         //check
         assertFalse(persons.isEmpty());
         assertTrue(persons.size() == 2);
         //ensure it's encrypted in the database
-        persons = personRepository.findByFirstName("john");
+        persons = personRepository.findByFirstName(firstName);
         assertNotNull(persons);
         assertFalse(persons.isEmpty());
         assertTrue(persons.size() == 1);
-        assertEquals(persons.get(0).getFirstName(),"john");
+        assertEquals(persons.get(0).getFirstName(),firstName);
     }
 
 }

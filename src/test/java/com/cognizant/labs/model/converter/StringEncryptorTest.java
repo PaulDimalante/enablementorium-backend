@@ -9,7 +9,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 
 import static org.junit.Assert.*;
 
-@Ignore
+//@Ignore
 @RunWith(PowerMockRunner.class)
 public class StringEncryptorTest {
 

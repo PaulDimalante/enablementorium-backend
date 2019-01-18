@@ -11,7 +11,7 @@ import javax.crypto.Cipher;
 
 import static org.junit.Assert.*;
 
-@Ignore
+//@Ignore
 @RunWith(PowerMockRunner.class)
 public class CryptographyUtilTest {
 
@@ -27,6 +27,13 @@ public class CryptographyUtilTest {
         String encrypted = util.encrypt("hello");
         assertNotNull(encrypted);
         assertTrue(encrypted.length() > "hello".length());
+    }
+
+    @Test
+    public void testEncryptLoop() throws Exception {
+        for (int i=0;i<10;i++) {
+            System.out.println(util.encrypt("hello"));
+        }
     }
 
     @Test
