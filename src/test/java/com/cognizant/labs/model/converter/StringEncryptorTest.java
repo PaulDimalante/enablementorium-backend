@@ -23,6 +23,7 @@ public class StringEncryptorTest {
     public void before() throws Exception {
         util = new CryptographyUtil();
         MemberModifier.field(CryptographyUtil.class,"key").set(util,"test123456781234");
+        MemberModifier.field(CryptographyUtil.class,"iv").set(util,"87b7225d16ea2ae1f41d0b13fdce9bba");
         stringEncryptor = new StringEncryptor();
         MemberModifier.field(StringEncryptor.class,"cryptographyUtil").set(stringEncryptor,util);
     }

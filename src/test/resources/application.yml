@@ -8,7 +8,7 @@ spring:
         format_sql: true
 encryption:
   key: test123456781234
-  salt: thisisalonglongsalt
+  iv: 87b7225d16ea2ae1f41d0b13fdce9bba
 logging:
   level:
     org:

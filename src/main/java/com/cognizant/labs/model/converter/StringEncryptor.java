@@ -14,7 +14,7 @@ public class StringEncryptor implements AttributeConverter<String,String> {
     @Autowired
     private CryptographyUtil cryptographyUtil;
     @Override
-    public String convertToDatabaseColumn(String attribute) {
+    public String convertToDatabaseColumn(String attribute)  {
         //check the attribute exists
         if (isNotEmpty(attribute)) {
             //encrypt
