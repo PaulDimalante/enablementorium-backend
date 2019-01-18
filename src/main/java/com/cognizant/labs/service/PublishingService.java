@@ -21,4 +21,8 @@ public class PublishingService {
         return person;
     }
 
+    public void reset() {
+        this.person = null;
+    }
+
 }

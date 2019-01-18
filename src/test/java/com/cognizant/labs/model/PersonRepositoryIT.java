@@ -8,12 +8,16 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.web.context.WebApplicationContext;
 
+import javax.sql.DataSource;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import static org.junit.Assert.*;
@@ -24,7 +28,7 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppC
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@ActiveProfiles("local")
+@ActiveProfiles({"local","test"})
 public class PersonRepositoryIT {
 
     @Autowired
@@ -37,6 +41,9 @@ public class PersonRepositoryIT {
 
     @Autowired
     ObjectMapper mapper;
+
+    @Autowired
+    DataSource dataSource;
 
     @Before
     public void before() throws Exception {
@@ -88,6 +95,51 @@ public class PersonRepositoryIT {
         response = mapper.readValue(result.getResponse().getContentAsString(),new TypeReference<Map<String,Object>>(){});
         page = (Map<String, Object>) response.get("page");
         assertTrue(((Integer) page.get("totalElements")) != 1);
+    }
+
+
+    @Test
+    public void testEncryptionDecryption() throws Exception {
+        //persist a value
+        Person person = new Person();
+        person.setFirstName("john");
+        //save
+        person = personRepository.save(person);
+        //ensure it's encrypted in the database
+        JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+        String firstName = jdbcTemplate.queryForObject("select p.first_name from person p where p.id = " + person.getId(),String.class);
+        assertFalse(firstName.equalsIgnoreCase("john"));
+        assertTrue(firstName.length() > "john".length());
+        System.out.println(firstName);
+    }
+
+    @Test
+    public void testEncryptedSearch() throws Exception {
+        String firstName = "john";
+        List<Person> persons = new ArrayList<>();
+        //persist a value
+        Person person = new Person();
+        person.setFirstName(firstName);
+        persons.add(person);
+        //save
+//        personRepository.save(person);
+        //save another one
+        person = new Person();
+        person.setFirstName("jane");
+        persons.add(person);
+        //save
+        personRepository.saveAll(persons);
+        //get the baseline
+        persons = personRepository.findAll();
+        //check
+        assertFalse(persons.isEmpty());
+        assertTrue(persons.size() == 2);
+        //ensure it's encrypted in the database
+        persons = personRepository.findByFirstName(firstName);
+        assertNotNull(persons);
+        assertFalse(persons.isEmpty());
+        assertTrue(persons.size() == 1);
+        assertEquals(persons.get(0).getFirstName(),firstName);
     }
 
 }
