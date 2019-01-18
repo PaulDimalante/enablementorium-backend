@@ -72,8 +72,7 @@ pipeline {
       }
       steps {
         withSonarQubeEnv('Sonar_GCP') {
-            sh './gradlew check jacocoTestCoverageVerification sonar -Dsonar.host.url=https://sonar.unreleased.work -Dsonar.projectName=reference-ms-crud'
-            updateGitlabCommitStatus name: 'sonar', state: 'success'
+            sh './gradlew check jacocoTestCoverageVerification sonar -Dsonar.host.url=$SONAR_HOST_URL -Dsonar.projectName=reference-ms-crud'
         }
       }
     }
@@ -87,6 +86,7 @@ pipeline {
         timeout(time: 5, unit: 'MINUTES') {
           waitForQualityGate abortPipeline: true
         }
+        updateGitlabCommitStatus name: 'sonar', state: 'success'
         acceptGitLabMR()
       }
     }
