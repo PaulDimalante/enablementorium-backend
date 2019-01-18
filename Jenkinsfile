@@ -72,7 +72,7 @@ pipeline {
       }
       steps {
         withSonarQubeEnv('Sonar_GCP') {
-            sh './gradlew check jacocoTestCoverageVerification sonar -Dsonar.host.url=https://sonar.unreleased.work -Dsonar.projectName=reference-ms-crud -Dsonar.branch=${env.BRANCH_NAME}'
+            sh './gradlew check jacocoTestCoverageVerification sonar -Dsonar.host.url=https://sonar.unreleased.work -Dsonar.projectName=reference-ms-crud'
             updateGitlabCommitStatus name: 'sonar', state: 'success'
         }
       }
