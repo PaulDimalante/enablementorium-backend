@@ -11,13 +11,10 @@ import org.bouncycastle.crypto.engines.AESEngine;
 import org.bouncycastle.crypto.modes.GCMBlockCipher;
 import org.bouncycastle.crypto.params.KeyParameter;
 import org.bouncycastle.crypto.params.ParametersWithIV;
-import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.nio.charset.Charset;
-import java.security.Provider;
-import java.security.Security;
 
 
 @Component("crypto")
@@ -30,33 +27,18 @@ public class CryptographyUtil {
     @Value("${encryption.iv}")
     private String iv;
 
-//    static {
-//        boolean hasBC = false;
-//        for (Provider provider : Security.getProviders()) {
-//            if (provider.getName().equals(new BouncyCastleProvider().getName())) {
-//                hasBC = true;
-//                break;
-//            }//end if
-//        }//end for
-//        if (!hasBC) {
-//            Security.addProvider(new BouncyCastleProvider());
-//        }//end if
-//    }
-
     public String encrypt(String attribute)  {
-        final byte [] info_plaintext = attribute.getBytes();
+        final byte [] plaintext = attribute.getBytes();
         final GCMBlockCipher gcm = new GCMBlockCipher(new AESEngine());
         final CipherParameters ivAndKey;
         try {
-//            ivAndKey = new ParametersWithIV(new KeyParameter(Hex.decodeHex(key.toCharArray())), Hex.decodeHex(iv.toCharArray()));
             ivAndKey = new ParametersWithIV(new KeyParameter(key.getBytes()), iv.getBytes());
             gcm.init(true, ivAndKey);
-            final byte [] inputBuf = new byte[gcm.getOutputSize(info_plaintext.length)];
-            final int length1 = gcm.processBytes(info_plaintext, 0, info_plaintext.length, inputBuf, 0);
+            final byte [] inputBuf = new byte[gcm.getOutputSize(plaintext.length)];
+            final int length1 = gcm.processBytes(plaintext, 0, plaintext.length, inputBuf, 0);
             final int length2 = gcm.doFinal(inputBuf, length1);
             final byte [] info_ciphertext = ArrayUtils.subarray(inputBuf, 0, length1 + length2);
-            final String info_ciphertext_hex = new String(Hex.encodeHex(info_ciphertext));
-            return info_ciphertext_hex;
+            return new String(Hex.encodeHex(info_ciphertext));
         } catch (InvalidCipherTextException e) {
             logger.error(e);
             return null;

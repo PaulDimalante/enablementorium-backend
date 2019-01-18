@@ -1,5 +1,6 @@
 package com.cognizant.labs.model.converter;
 
+import org.apache.commons.codec.DecoderException;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -46,6 +47,16 @@ public class CryptographyUtilTest {
         assertTrue(encrypted.length() > "hello".length());
         //now decrypt it
         String result = util.decrypt(encrypted);
+        assertEquals(result,"hello");
+    }
+
+    @Test(expected = AssertionError.class)
+    public void testDecryptException() throws Exception {
+        String encrypted = util.encrypt("hello");
+        assertNotNull(encrypted);
+        assertTrue(encrypted.length() > "hello".length());
+        //now decrypt it
+        String result = util.decrypt("hello");
         assertEquals(result,"hello");
     }
 }
