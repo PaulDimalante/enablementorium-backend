@@ -1,29 +1,28 @@
-package com.cognizant.labs.model.converter;
+package com.cognizant.labs.security;
 
-import org.apache.commons.codec.DecoderException;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.api.support.membermodification.MemberModifier;
 import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import javax.crypto.Cipher;
-
 import static org.junit.Assert.*;
 
-//@Ignore
 @PowerMockIgnore("javax.crypto.*")
 @RunWith(PowerMockRunner.class)
-public class CryptographyUtilTest {
+public class EncryptionUtilTest {
 
-    CryptographyUtil util = new CryptographyUtil();
+    EncryptionUtil util;
 
     @Before
     public void before() throws Exception {
-        MemberModifier.field(CryptographyUtil.class,"key").set(util,"test123456781234");
-        MemberModifier.field(CryptographyUtil.class,"iv").set(util,"87b7225d16ea2ae1f41d0b13fdce9bba");
+        util = new EncryptionUtil();
+        MemberModifier.field(EncryptionUtil.class,"key").set(util,"test123456781234");
+        MemberModifier.field(EncryptionUtil.class,"iv").set(util,"87b7225d16ea2ae1f41d0b13fdce9bba");
+        MemberModifier.field(EncryptionUtil.class,"keyStorePassword").set(util,"Ilove2cod#");
+        MemberModifier.field(EncryptionUtil.class,"certificatePassword").set(util,"Ilove2cod#");
+        MemberModifier.field(EncryptionUtil.class,"certificateName").set(util,"mykey");
     }
 
     @Test
@@ -58,5 +57,25 @@ public class CryptographyUtilTest {
         //now decrypt it
         String result = util.decrypt("hello");
         assertEquals(result,"hello");
+    }
+
+    @Test
+    public void testEncryptCertificate() {
+        String value = "hello";
+        String result = util.encryptCertificate(value);
+        assertNotNull(result);
+        assertTrue(result.length() > value.length());
+    }
+
+    @Test
+    public void testDecryptCertificate() {
+        String value = "hello";
+        String result = util.encryptCertificate(value);
+        assertNotNull(result);
+        assertTrue(result.length() > value.length());
+        //now decrypt
+        String decrypted = util.decryptCertificate(result);
+        assertNotNull(decrypted);
+        assertEquals(decrypted,value);
     }
 }

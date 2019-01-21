@@ -1,5 +1,6 @@
 package com.cognizant.labs.model.converter;
 
+import com.cognizant.labs.security.EncryptionUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
@@ -12,14 +13,15 @@ import static org.apache.commons.lang.StringUtils.isNotEmpty;
 public class StringEncryptor implements AttributeConverter<String,String> {
 
     @Autowired
-    private CryptographyUtil cryptographyUtil;
+    private EncryptionUtil encryptionUtil;
+
     @Override
     public String convertToDatabaseColumn(String attribute)  {
         //check the attribute exists
         if (isNotEmpty(attribute)) {
             //encrypt
             SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
-            return cryptographyUtil.encrypt(attribute);
+            return encryptionUtil.encrypt(attribute);
         }//end if
         return null;//continue
     }
@@ -30,7 +32,7 @@ public class StringEncryptor implements AttributeConverter<String,String> {
         if (isNotEmpty(dbData)) {
             //encrypt
             SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
-            return cryptographyUtil.decrypt(dbData);
+            return encryptionUtil.decrypt(dbData);
         }//end if
         return null;
     }

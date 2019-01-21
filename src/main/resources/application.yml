@@ -8,6 +8,11 @@ eureka:
 encryption:
   key: test123456781234
   iv: 87b7225d16ea2ae1f41d0b13fdce9bba
+  keystore:
+    password: Ilove2cod#
+  certificate:
+    password: Ilove2cod#
+    name: mykey
 
 ---
 spring:

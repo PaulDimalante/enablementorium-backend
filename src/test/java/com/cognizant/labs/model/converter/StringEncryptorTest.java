@@ -1,5 +1,6 @@
 package com.cognizant.labs.model.converter;
 
+import com.cognizant.labs.security.EncryptionUtil;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -17,15 +18,15 @@ public class StringEncryptorTest {
 
     private StringEncryptor stringEncryptor;
 
-    private CryptographyUtil util;
+    private EncryptionUtil util;
 
     @Before
     public void before() throws Exception {
-        util = new CryptographyUtil();
-        MemberModifier.field(CryptographyUtil.class,"key").set(util,"test123456781234");
-        MemberModifier.field(CryptographyUtil.class,"iv").set(util,"87b7225d16ea2ae1f41d0b13fdce9bba");
+        util = new EncryptionUtil();
+        MemberModifier.field(EncryptionUtil.class,"key").set(util,"test123456781234");
+        MemberModifier.field(EncryptionUtil.class,"iv").set(util,"87b7225d16ea2ae1f41d0b13fdce9bba");
         stringEncryptor = new StringEncryptor();
-        MemberModifier.field(StringEncryptor.class,"cryptographyUtil").set(stringEncryptor,util);
+        MemberModifier.field(StringEncryptor.class,"encryptionUtil").set(stringEncryptor,util);
     }
 
     @Test

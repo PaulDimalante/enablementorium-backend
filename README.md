@@ -34,3 +34,8 @@ gitlab
 - `./gradlew htmlDependencyReport`
 - 
 trigger
+=======
+## Key Setup
+
+`keytool -genkeypair -alias mykey -storepass [password] -keypass [password] -keyalg RSA -keystore keystore.jks`
+`keytool -importkeystore -srckeystore keystore.jks -destkeystore keystore.jks -deststoretype pkcs12`
