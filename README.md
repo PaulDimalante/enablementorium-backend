@@ -7,7 +7,7 @@ microservices
 
 - run as 'local' to have a non-secured endpoint
 - run as 'default' to have an OAuth2 compliant secured resource
-<<<<<<< HEAD
+
 gitlab
 =======
 ## Set up your project on Jenkins
@@ -26,3 +26,11 @@ gitlab
     - For the URL, get from your Jenkins project under Configure
         - Look for where it says 'Build when a change is pushed to GitLab. GitLab webhook URL:' `<yoururl@example.com>` This is your URL
     - For the Secret Token, click the advanced tab under Build Triggers, and scroll down to secret token. This is your Token
+
+
+## DependencyCheck
+
+- `./gradlew dependencyCheckAnalyze`
+- `./gradlew htmlDependencyReport`
+- 
+trigger
