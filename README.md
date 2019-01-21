@@ -32,3 +32,5 @@ gitlab
 
 - `./gradlew dependencyCheckAnalyze`
 - `./gradlew htmlDependencyReport`
+- 
+trigger
