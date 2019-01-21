@@ -41,4 +41,26 @@ public class PublishingServiceTest {
         assertNotNull(service.getPerson());
     }
 
+    @Test
+    public void testReset() throws Exception {
+        PublishingService service = new PublishingService();
+        //mocks
+        PublicKey publicKey = mock(PublicKey.class);
+        PrivateKey privateKey = mock(PrivateKey.class);
+        KeyPair keyPair = new KeyPair(publicKey,privateKey);
+        EncryptionUtil encryptionUtil = new EncryptionUtil();
+        MemberModifier.field(EncryptionUtil.class,"key").set(encryptionUtil,"test123456781234");
+        MemberModifier.field(EncryptionUtil.class,"iv").set(encryptionUtil,"87b7225d16ea2ae1f41d0b13fdce9bba");
+        MemberModifier.field(EncryptionUtil.class,"keyStorePassword").set(encryptionUtil,"Ilove2cod#");
+        MemberModifier.field(EncryptionUtil.class,"certificatePassword").set(encryptionUtil,"Ilove2cod#");
+        MemberModifier.field(EncryptionUtil.class,"certificateName").set(encryptionUtil,"mykey");
+        //add the crypto
+        MemberModifier.field(PublishingService.class,"encryptionUtil").set(service,encryptionUtil);
+        service.sendUpdate(new Person());
+        //check
+        assertNotNull(service.getPerson());
+        service.reset();
+        assertNull(service.getPerson());
+    }
+
 }

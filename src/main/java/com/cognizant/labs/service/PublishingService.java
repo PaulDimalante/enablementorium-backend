@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.Convert;
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 
 @Service
@@ -40,11 +39,10 @@ public class PublishingService {
         for (Field field : person.getClass().getDeclaredFields()) {
             field.setAccessible(true);
             try {
-                if (field.isAnnotationPresent(Convert.class) && field.get(person) != null) {
-                    //convert this field
-                    if (field.getType().isAssignableFrom(String.class)) {
+                if (field.isAnnotationPresent(Convert.class)
+                        && field.get(person) != null
+                        && field.getType().isAssignableFrom(String.class)) {
                         field.set(person, encryptionUtil.encryptCertificate(field.get(person).toString()));
-                    }//end if
                 }//end if
             }
             catch (IllegalAccessException e) {

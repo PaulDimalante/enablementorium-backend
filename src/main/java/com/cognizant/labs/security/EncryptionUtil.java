@@ -15,12 +15,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.Cipher;
+import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
-import java.security.KeyPair;
-import java.security.KeyStore;
-import java.security.PrivateKey;
-import java.security.PublicKey;
+import java.security.*;
+import java.security.cert.CertificateException;
 import java.util.Base64;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
@@ -94,7 +93,6 @@ public class EncryptionUtil {
 
             return Base64.getEncoder().encodeToString(cipherText);
         } catch (Exception e) {
-            e.printStackTrace();
             logger.error(e);
         }
         return null;
@@ -116,34 +114,39 @@ public class EncryptionUtil {
     }
 
 
-    public static KeyPair getKeyPairFromKeyStore() throws Exception {
-        InputStream ins = EncryptionUtil.class.getResourceAsStream(keyStoreLocation);
-        KeyStore keyStore = KeyStore.getInstance(KEYSTORE_TYPE);
-        keyStore.load(ins, keyStorePassword.toCharArray());   //Keystore password
-        KeyStore.PasswordProtection keyPassword =       //Key password
-                new KeyStore.PasswordProtection(certificatePassword.toCharArray());
+    public static KeyPair getKeyPairFromKeyStore() {
+        try {
+            InputStream ins = EncryptionUtil.class.getResourceAsStream(keyStoreLocation);
+            KeyStore keyStore = KeyStore.getInstance(KEYSTORE_TYPE);
+            keyStore.load(ins, keyStorePassword.toCharArray());   //Keystore password
+            KeyStore.PasswordProtection keyPassword =       //Key password
+                    new KeyStore.PasswordProtection(certificatePassword.toCharArray());
 
-        KeyStore.PrivateKeyEntry privateKeyEntry = (KeyStore.PrivateKeyEntry) keyStore.getEntry(certificateName, keyPassword);
+            KeyStore.PrivateKeyEntry privateKeyEntry = (KeyStore.PrivateKeyEntry) keyStore.getEntry(certificateName, keyPassword);
 
-        java.security.cert.Certificate cert = keyStore.getCertificate(certificateName);
-        PublicKey publicKey = cert.getPublicKey();
-        PrivateKey privateKey = privateKeyEntry.getPrivateKey();
+            java.security.cert.Certificate cert = keyStore.getCertificate(certificateName);
+            PublicKey publicKey = cert.getPublicKey();
+            PrivateKey privateKey = privateKeyEntry.getPrivateKey();
 
-        return new KeyPair(publicKey, privateKey);
+            return new KeyPair(publicKey, privateKey);
+        } catch (KeyStoreException | IOException | NoSuchAlgorithmException | CertificateException | UnrecoverableEntryException e) {
+            logger.error(e);
+        }
+        return null;
     }
 
     @Value("${encryption.keystore.password}")
-    public void setKeyStorePassword(String keyStorePassword) {
-        this.keyStorePassword = keyStorePassword;
+    public static void setKeyStorePassword(String keyStorePassword) {
+        EncryptionUtil.keyStorePassword = keyStorePassword;
     }
 
     @Value("${encryption.certificate.password}")
-    public void setCertificatePassword(String certificatePassword) {
-        this.certificatePassword = certificatePassword;
+    public static void setCertificatePassword(String certificatePassword) {
+        EncryptionUtil.certificatePassword = certificatePassword;
     }
 
     @Value("${encryption.certificate.name}")
-    public void setCertificateName(String certificateName) {
-        this.certificateName = certificateName;
+    public static void setCertificateName(String certificateName) {
+        EncryptionUtil.certificateName = certificateName;
     }
 }
