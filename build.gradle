@@ -3,6 +3,7 @@ plugins {
     id 'org.springframework.boot' version '2.1.1.RELEASE'
     id "org.sonarqube" version "2.7"
     id "com.github.pivotalservices.cf-app" version "2.3.0-rc.6"
+    id "org.owasp.dependencycheck" version "4.0.2"
 }
 
 apply plugin: 'java'
@@ -11,6 +12,8 @@ apply plugin: 'io.spring.dependency-management'
 apply plugin: 'jacoco'
 apply plugin: 'org.sonarqube'
 apply plugin: 'maven'
+apply plugin: 'org.owasp.dependencycheck'
+apply plugin: 'project-report'
 
 group 'com.cognizant.labs'
 version = project.properties.containsKey("releaseVersion") ? "${releaseVersion}" : "1.0-SNAPSHOT"
@@ -98,15 +101,21 @@ dependencies {
     compile 'org.springframework.boot:spring-boot-starter-actuator'
     compile 'org.springframework.boot:spring-boot-starter-data-jpa'
     compile 'org.springframework.boot:spring-boot-starter-data-rest'
-    compile 'org.springframework.boot:spring-boot-starter-security'
+    compile('org.springframework.boot:spring-boot-starter-security:2.1.1.RELEASE') {
+	exclude group: 'org.springframework.security', module: 'spring-security-rsa' 
+    }
     compile 'org.springframework.security.oauth.boot:spring-security-oauth2-autoconfigure:2.1.1.RELEASE'
-    compile 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
+    compile('org.springframework.cloud:spring-cloud-starter-netflix-eureka-client') {
+	exclude group: 'org.springframework.security', module: 'spring-security-rsa'
+    }
+    compile 'com.google.guava:guava:25.0-jre'
+    compile 'com.sun.jersey.contribs:jersey-apache-client4:1.19.4'
     compile 'org.springframework.hateoas:spring-hateoas'
     compile 'io.springfox:springfox-swagger2:3.0.0-SNAPSHOT'
     compile 'io.springfox:springfox-swagger-ui:3.0.0-SNAPSHOT'
     compile 'io.springfox:springfox-data-rest:3.0.0-SNAPSHOT'
-    compile 'com.h2database:h2'
     compile 'org.bouncycastle:bcpkix-jdk15on:1.60'
+    testCompile 'com.h2database:h2'
     testCompile 'org.mock-server:mockserver-netty:3.10.8'
     testCompile 'org.mock-server:mockserver-client-java:3.10.8'
     testCompile 'org.springframework.boot:spring-boot-starter-test'
@@ -117,4 +126,8 @@ dependencies {
     testCompile 'org.apache.httpcomponents:httpclient'
 }
 
-
+dependencyCheck {
+    failBuildOnCVSS=1
+    cveValidForHours=1
+    suppressionFile='./cves/suppressions.xml'
+}
