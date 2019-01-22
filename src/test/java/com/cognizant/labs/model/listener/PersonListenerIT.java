@@ -35,6 +35,7 @@ public class PersonListenerIT {
         //check for post
         person = publishingService.getPerson();
         assertNotNull(person);
+        assertNotNull(person.getFirstName());
         assertTrue(person.getFirstName().length() > "john".length());
         assertFalse(person.getFirstName().equals("john"));
     }

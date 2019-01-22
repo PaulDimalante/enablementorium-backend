@@ -42,7 +42,7 @@ public class PublishingService {
                 if (field.isAnnotationPresent(Convert.class)
                         && field.get(person) != null
                         && field.getType().isAssignableFrom(String.class)) {
-                        field.set(person, encryptionUtil.encryptCertificate(field.get(person).toString()));
+                    field.set(person, encryptionUtil.encryptCertificate(field.get(person).toString()));
                 }//end if
             }
             catch (IllegalAccessException e) {

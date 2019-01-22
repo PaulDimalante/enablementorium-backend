@@ -136,17 +136,17 @@ public class EncryptionUtil {
     }
 
     @Value("${encryption.keystore.password}")
-    public static void setKeyStorePassword(String keyStorePassword) {
-        EncryptionUtil.keyStorePassword = keyStorePassword;
+    public void setKeyStorePassword(String keyStorePassword) {
+        this.keyStorePassword = keyStorePassword;
     }
 
     @Value("${encryption.certificate.password}")
-    public static void setCertificatePassword(String certificatePassword) {
-        EncryptionUtil.certificatePassword = certificatePassword;
+    public void setCertificatePassword(String certificatePassword) {
+        this.certificatePassword = certificatePassword;
     }
 
     @Value("${encryption.certificate.name}")
-    public static void setCertificateName(String certificateName) {
-        EncryptionUtil.certificateName = certificateName;
+    public void setCertificateName(String certificateName) {
+        this.certificateName = certificateName;
     }
 }
