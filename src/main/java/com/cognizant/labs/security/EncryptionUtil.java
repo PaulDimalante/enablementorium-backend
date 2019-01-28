@@ -2,6 +2,7 @@ package com.cognizant.labs.security;
 
 import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.binary.Hex;
+import org.apache.commons.jxpath.ri.model.beans.NullPointer;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.juli.logging.Log;
 import org.apache.juli.logging.LogFactory;
@@ -14,7 +15,10 @@ import org.bouncycastle.crypto.params.ParametersWithIV;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
@@ -107,7 +111,7 @@ public class EncryptionUtil {
             decriptCipher.init(Cipher.DECRYPT_MODE, keyPair.getPrivate());
 
             return new String(decriptCipher.doFinal(bytes), UTF_8);
-        } catch (Exception e) {
+        } catch (NullPointerException | InvalidKeyException | IllegalBlockSizeException | BadPaddingException | NoSuchAlgorithmException | NoSuchPaddingException e) {
             logger.error(e);
         }
         return null;
