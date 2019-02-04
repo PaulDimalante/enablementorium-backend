@@ -5,9 +5,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 
 @SpringBootApplication
 public class Application {
@@ -16,9 +16,10 @@ public class Application {
         SpringApplication.run(Application.class,args);
     }
 
-    @Profile("local")
+    @Profile("test")
     @Configuration
-    class DisabledSecurity extends WebSecurityConfigurerAdapter {
+    static class DisableSecurity extends WebSecurityConfigurerAdapter {
+
         @Override
         public void configure(WebSecurity web) throws Exception {
             web.ignoring().antMatchers("/**");
@@ -27,7 +28,15 @@ public class Application {
 
     @Profile("default")
     @EnableGlobalMethodSecurity(prePostEnabled = true)
-    @EnableResourceServer
     @Configuration
-    class SecurityConfig { }
+    static class SecurityConfig extends WebSecurityConfigurerAdapter {
+
+        @Override
+        protected void configure(HttpSecurity http) throws Exception {
+            http.authorizeRequests()
+                    .anyRequest().authenticated()
+                    .and()
+                    .oauth2ResourceServer().jwt();
+        }
+    }
 }
