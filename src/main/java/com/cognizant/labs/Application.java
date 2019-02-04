@@ -16,9 +16,10 @@ public class Application {
         SpringApplication.run(Application.class,args);
     }
 
-    @Profile("local")
+    @Profile("test")
     @Configuration
-    class DisabledSecurity extends WebSecurityConfigurerAdapter {
+    static class DisableSecurity extends WebSecurityConfigurerAdapter {
+
         @Override
         public void configure(WebSecurity web) throws Exception {
             web.ignoring().antMatchers("/**");
