@@ -90,12 +90,14 @@ public class EncryptionUtil {
         try {
             //get the keypair
             KeyPair keyPair = getKeyPairFromKeyStore();
-            Cipher encryptCipher = Cipher.getInstance("RSA");
-            encryptCipher.init(Cipher.ENCRYPT_MODE, keyPair.getPublic());
+            if (keyPair != null) {
+                Cipher encryptCipher = Cipher.getInstance("RSA");
+                encryptCipher.init(Cipher.ENCRYPT_MODE, keyPair.getPublic());
 
-            byte[] cipherText = encryptCipher.doFinal(data.getBytes(UTF_8));
+                byte[] cipherText = encryptCipher.doFinal(data.getBytes(UTF_8));
 
-            return Base64.getEncoder().encodeToString(cipherText);
+                return Base64.getEncoder().encodeToString(cipherText);
+            }//end if
         } catch (Exception e) {
             logger.error(e);
         }
@@ -105,12 +107,14 @@ public class EncryptionUtil {
     public String decryptCertificate(String data) {
         try {
             KeyPair keyPair = getKeyPairFromKeyStore();
-            byte[] bytes = Base64.getDecoder().decode(data);
+            if (keyPair != null) {
+                byte[] bytes = Base64.getDecoder().decode(data);
 
-            Cipher decriptCipher = Cipher.getInstance("RSA");
-            decriptCipher.init(Cipher.DECRYPT_MODE, keyPair.getPrivate());
+                Cipher decriptCipher = Cipher.getInstance("RSA");
+                decriptCipher.init(Cipher.DECRYPT_MODE, keyPair.getPrivate());
 
-            return new String(decriptCipher.doFinal(bytes), UTF_8);
+                return new String(decriptCipher.doFinal(bytes), UTF_8);
+            }//end if
         } catch (NullPointerException | InvalidKeyException | IllegalBlockSizeException | BadPaddingException | NoSuchAlgorithmException | NoSuchPaddingException e) {
             logger.error(e);
         }
