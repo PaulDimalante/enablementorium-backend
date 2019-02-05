@@ -33,8 +33,11 @@ task integrationTest(type: Test) {
 repositories {
     mavenCentral()
     maven {
-        url 'http://oss.jfrog.org/artifactory/oss-snapshot-local/'
+        url 'https://repository.unreleased.work/repository/oss-urls/'
     }
+//    maven {
+//        url 'http://oss.jfrog.org/artifactory/oss-snapshot-local/'
+//    }
     maven {
         url 'http://repo.spring.io/milestone'
     }

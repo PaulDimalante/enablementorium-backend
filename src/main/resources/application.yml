@@ -34,3 +34,4 @@ server:
 eureka:
   client:
     register-with-eureka: false
+    enabled: false
