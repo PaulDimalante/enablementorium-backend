@@ -22,6 +22,9 @@ spring:
         jwt:
           jwk-set-uri: https://keycloak.unreleased.work/auth/realms/oauth2-test/protocol/openid-connect/certs
 
+realm:
+  appName: test-app
+
 ---
 spring:
   profiles: local
