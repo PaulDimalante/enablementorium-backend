@@ -58,8 +58,8 @@ public class EncryptionUtil {
             final byte [] inputBuf = new byte[gcm.getOutputSize(plaintext.length)];
             final int length1 = gcm.processBytes(plaintext, 0, plaintext.length, inputBuf, 0);
             final int length2 = gcm.doFinal(inputBuf, length1);
-            final byte [] info_ciphertext = ArrayUtils.subarray(inputBuf, 0, length1 + length2);
-            return new String(Hex.encodeHex(info_ciphertext));
+            final byte [] cipherText = ArrayUtils.subarray(inputBuf, 0, length1 + length2);
+            return new String(Hex.encodeHex(cipherText));
         } catch (InvalidCipherTextException e) {
             logger.error(e);
             return null;
