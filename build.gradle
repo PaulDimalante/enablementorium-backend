@@ -35,9 +35,6 @@ repositories {
     maven {
         url 'https://repository.unreleased.work/repository/oss-urls/'
     }
-//    maven {
-//        url 'http://oss.jfrog.org/artifactory/oss-snapshot-local/'
-//    }
     maven {
         url 'http://repo.spring.io/milestone'
     }
@@ -121,7 +118,7 @@ dependencies {
     compile 'io.springfox:springfox-data-rest:3.0.0-SNAPSHOT'
     compile 'org.bouncycastle:bcpkix-jdk15on:1.60'
     compile 'com.fasterxml.jackson.core:jackson-databind:2.9.8'
-    testCompile 'com.h2database:h2'
+    compile 'org.hsqldb:hsqldb'
     testCompile 'org.mock-server:mockserver-netty:3.10.8'
     testCompile 'org.mock-server:mockserver-client-java:3.10.8'
     testCompile 'org.springframework.boot:spring-boot-starter-test'
