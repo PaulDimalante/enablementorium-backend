@@ -78,4 +78,24 @@ public class EncryptionUtilTest {
         assertNotNull(decrypted);
         assertEquals(decrypted,value);
     }
+
+    @Test
+    public void testNullEncrypt() throws IllegalAccessException {
+        //change the values
+        MemberModifier.field(EncryptionUtil.class,"keyStorePassword").set(util,"blah");
+        MemberModifier.field(EncryptionUtil.class,"certificatePassword").set(util,"blah");
+        MemberModifier.field(EncryptionUtil.class,"certificateName").set(util,"blah");
+        //do it
+        assertNull(util.encryptCertificate("blah"));
+    }
+
+    @Test
+    public void testNullDecrypt() throws IllegalAccessException {
+        //change the values
+        MemberModifier.field(EncryptionUtil.class,"keyStorePassword").set(util,"blah");
+        MemberModifier.field(EncryptionUtil.class,"certificatePassword").set(util,"blah");
+        MemberModifier.field(EncryptionUtil.class,"certificateName").set(util,"blah");
+        //do it
+        assertNull(util.decryptCertificate("blah"));
+    }
 }

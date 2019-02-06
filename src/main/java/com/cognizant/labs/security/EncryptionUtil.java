@@ -2,7 +2,6 @@ package com.cognizant.labs.security;
 
 import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.binary.Hex;
-import org.apache.commons.jxpath.ri.model.beans.NullPointer;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.juli.logging.Log;
 import org.apache.juli.logging.LogFactory;
@@ -145,16 +144,16 @@ public class EncryptionUtil {
 
     @Value("${encryption.keystore.password}")
     public void setKeyStorePassword(String keyStorePassword) {
-        this.keyStorePassword = keyStorePassword;
+        EncryptionUtil.keyStorePassword = keyStorePassword;
     }
 
     @Value("${encryption.certificate.password}")
     public void setCertificatePassword(String certificatePassword) {
-        this.certificatePassword = certificatePassword;
+        EncryptionUtil.certificatePassword = certificatePassword;
     }
 
     @Value("${encryption.certificate.name}")
     public void setCertificateName(String certificateName) {
-        this.certificateName = certificateName;
+        EncryptionUtil.certificateName = certificateName;
     }
 }
