@@ -12,7 +12,6 @@ import org.bouncycastle.crypto.modes.GCMBlockCipher;
 import org.bouncycastle.crypto.params.KeyParameter;
 import org.bouncycastle.crypto.params.ParametersWithIV;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
@@ -20,7 +19,6 @@ import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.security.*;
 import java.security.cert.CertificateException;
@@ -28,7 +26,6 @@ import java.util.Base64;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
-@Component
 public class EncryptionUtil {
 
     private static final Log logger = LogFactory.getLog(EncryptionUtil.class);
@@ -143,18 +140,15 @@ public class EncryptionUtil {
         return null;
     }
 
-    @Value("${encryption.keystore.password}")
-    public void setKeyStorePassword(String keyStorePassword) {
+    public static void setKeyStorePassword(String keyStorePassword) {
         EncryptionUtil.keyStorePassword = keyStorePassword;
     }
 
-    @Value("${encryption.certificate.password}")
-    public void setCertificatePassword(String certificatePassword) {
+    public static void setCertificatePassword(String certificatePassword) {
         EncryptionUtil.certificatePassword = certificatePassword;
     }
 
-    @Value("${encryption.certificate.name}")
-    public void setCertificateName(String certificateName) {
+    public static void setCertificateName(String certificateName) {
         EncryptionUtil.certificateName = certificateName;
     }
 }
