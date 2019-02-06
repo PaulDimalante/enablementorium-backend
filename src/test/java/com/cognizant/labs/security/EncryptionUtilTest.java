@@ -80,7 +80,7 @@ public class EncryptionUtilTest {
     }
 
     @Test
-    public void testNullEncrypt() throws IllegalAccessException {
+    public void testNullEncryptCertificate() throws IllegalAccessException {
         //change the values
         MemberModifier.field(EncryptionUtil.class,"keyStorePassword").set(util,"blah");
         MemberModifier.field(EncryptionUtil.class,"certificatePassword").set(util,"blah");
@@ -90,12 +90,28 @@ public class EncryptionUtilTest {
     }
 
     @Test
-    public void testNullDecrypt() throws IllegalAccessException {
+    public void testNullDecryptCertificate() throws IllegalAccessException {
         //change the values
         MemberModifier.field(EncryptionUtil.class,"keyStorePassword").set(util,"blah");
         MemberModifier.field(EncryptionUtil.class,"certificatePassword").set(util,"blah");
         MemberModifier.field(EncryptionUtil.class,"certificateName").set(util,"blah");
         //do it
         assertNull(util.decryptCertificate("blah"));
+    }
+
+    @Test
+    public void testNullEncrypt() throws IllegalAccessException {
+        MemberModifier.field(EncryptionUtil.class,"key").set(util,"");
+        MemberModifier.field(EncryptionUtil.class,"iv").set(util,"");
+        //do it
+        assertNull(util.encrypt("hello"));
+    }
+
+    @Test
+    public void testNullDencrypt() throws IllegalAccessException {
+        MemberModifier.field(EncryptionUtil.class,"key").set(util,"");
+        MemberModifier.field(EncryptionUtil.class,"iv").set(util,"");
+        //do it
+        assertNull(util.decrypt("hello"));
     }
 }

@@ -21,6 +21,7 @@ import javax.crypto.NoSuchPaddingException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.security.*;
 import java.security.cert.CertificateException;
 import java.util.Base64;
@@ -60,10 +61,10 @@ public class EncryptionUtil {
             final int length2 = gcm.doFinal(inputBuf, length1);
             final byte [] cipherText = ArrayUtils.subarray(inputBuf, 0, length1 + length2);
             return new String(Hex.encodeHex(cipherText));
-        } catch (InvalidCipherTextException e) {
+        } catch (IllegalArgumentException | InvalidCipherTextException e) {
             logger.error(e);
-            return null;
         }
+        return null;
     }
 
     public String decrypt(String dbData) {
@@ -77,11 +78,11 @@ public class EncryptionUtil {
             final int length1 = gcm.processBytes(ciphertext, 0, ciphertext.length, outBuf, 0);
 
             final int length2 = gcm.doFinal(outBuf, length1);
-            return new String(outBuf, 0, length1 + length2, Charset.forName("UTF-8"));
+            return new String(outBuf, 0, length1 + length2, StandardCharsets.UTF_8);
         } catch (InvalidCipherTextException | DecoderException e) {
             logger.error(e);
-            return null;
         }
+        return null;
     }
 
 
