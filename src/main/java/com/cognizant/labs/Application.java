@@ -49,7 +49,7 @@ public class Application {
         return encryptionUtil;
     }
 
-    @Profile("test")
+    @Profile("local")
     @Configuration
     static class DisableSecurity extends WebSecurityConfigurerAdapter {
 

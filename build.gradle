@@ -110,12 +110,16 @@ dependencies {
     compile 'com.google.guava:guava:25.0-jre'
     compile 'com.sun.jersey.contribs:jersey-apache-client4:1.19.4'
     compile 'org.springframework.hateoas:spring-hateoas'
-    compile 'io.springfox:springfox-swagger2:3.0.0-SNAPSHOT'
-    compile 'io.springfox:springfox-swagger-ui:3.0.0-SNAPSHOT'
-    compile 'io.springfox:springfox-data-rest:3.0.0-SNAPSHOT'
+    //TODO dropped swagger on Spring Data due ot issues
+//    compile 'io.springfox:springfox-swagger2:3.0.0-SNAPSHOT'
+//    compile 'io.springfox:springfox-swagger-ui:3.0.0-SNAPSHOT'
+//    compile 'io.springfox:springfox-data-rest:3.0.0-SNAPSHOT'
     compile 'org.bouncycastle:bcpkix-jdk15on:1.60'
     compile 'com.fasterxml.jackson.core:jackson-databind:2.9.8'
     compile 'org.hsqldb:hsqldb'
+    //messaging
+    compile 'org.springframework.cloud:spring-cloud-starter-stream-rabbit'
+
     testCompile 'org.mock-server:mockserver-netty:3.10.8'
     testCompile 'org.mock-server:mockserver-client-java:3.10.8'
     testCompile 'org.springframework.boot:spring-boot-starter-test'

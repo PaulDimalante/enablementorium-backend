@@ -4,7 +4,7 @@ eureka:
       defaultZone: ${vcap.services.eureka.credentials.url:http://localhost:8761/eureka/}
   instance:
     leaseRenewalIntervalInSeconds: 10
-    hostname: ${vcap.application.uris[0]:test}
+    hostname: ${vcap.application.uris[0]:localhost}
     nonSecurePort: 80
     securePort: 433
     securePortEnabled: true
@@ -20,6 +20,11 @@ encryption:
     name: mykey
 
 spring:
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: testuser
+    password: welcome
   security:
     oauth2:
       resourceserver:
@@ -32,6 +37,11 @@ realm:
 ---
 spring:
   profiles: local
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: testuser
+    password: welcome
   security:
     user:
       password: welcome1
