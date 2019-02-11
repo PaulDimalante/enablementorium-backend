@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <include resource="org/springframework/boot/logging/logback/base.xml"/>
+    <appender name="SYSLOG" class="ch.qos.logback.classic.net.SyslogAppender">
+        <syslogHost>localhost</syslogHost>
+        <port>514</port>
+        <facility>LOCAL0</facility>
+    </appender>
+
+    <Logger name="ROOT" level="INFO" additivity="false">
+        <appender-ref ref="SYSLOG" />
+    </Logger>
+</configuration>
