@@ -1,21 +1,14 @@
 package com.cognizant.labs;
 
-import com.cognizant.labs.security.EncryptionUtil;
-import com.cognizant.labs.security.KeyCloakOAuthPermissionEvaluator;
-import org.springframework.beans.factory.annotation.Value;
+import com.cognizant.labs.Enums.ClassListEnum;
+import com.cognizant.labs.models.MobOrder;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
-import org.springframework.security.access.PermissionEvaluator;
-import org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler;
-import org.springframework.security.access.expression.method.MethodSecurityExpressionHandler;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
-import org.springframework.security.config.annotation.method.configuration.GlobalMethodSecurityConfiguration;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+
+import javax.annotation.PostConstruct;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 @SpringBootApplication
 public class Application {
@@ -24,70 +17,62 @@ public class Application {
         SpringApplication.run(Application.class,args);
     }
 
-    @Value("${encryption.key}")
-    private String key;
+    @PostConstruct
+    public void saveMobOrders() {
+        MobOrder mobOrder1 = new MobOrder(1L, new ArrayList<>());
+        MobOrder mobOrder2 = new MobOrder(1L, new ArrayList<>());
+        MobOrder mobOrder3 = new MobOrder(1L, new ArrayList<>());
+        MobOrder mobOrder4 = new MobOrder(1L, new ArrayList<>());
+        MobOrder mobOrder5 = new MobOrder(1L, new ArrayList<>());
 
-    @Value("${encryption.iv}")
-    private String iv;
+        mobOrder1.setOrderOfMobs(generateOrder("Easy"));
+        mobOrder2.setOrderOfMobs(generateOrder("Easy"));
+        mobOrder3.setOrderOfMobs(generateOrder("Easy"));
+        mobOrder4.setOrderOfMobs(generateOrder("Easy"));
+        mobOrder5.setOrderOfMobs(generateOrder("Easy"));
 
-    @Value("${encryption.keystore.password}")
-    private String keyStorePassword;
+//        ArrayList<Location> locations = new ArrayList<>();
+//        locations.addAll(Arrays.asList(location1, location2, location3, location4, location5));
+//
+//        locations.forEach(location -> locationService.createOfficeLocation(location));
 
-    @Value("${encryption.certificate.password}")
-    private String certificatePassword;
-
-    @Value("${encryption.certificate.name}")
-    private String certificateName;
-
-    @Bean
-    public EncryptionUtil encryptionUtil() {
-        EncryptionUtil encryptionUtil = new EncryptionUtil();
-        EncryptionUtil.setCertificateName(certificateName);
-        EncryptionUtil.setCertificatePassword(certificatePassword);
-        EncryptionUtil.setKeyStorePassword(keyStorePassword);
-        //return
-        return encryptionUtil;
     }
 
-    @Profile("local")
-    @Configuration
-    static class DisableSecurity extends WebSecurityConfigurerAdapter {
-
-        @Override
-        public void configure(WebSecurity web) throws Exception {
-            web.ignoring().antMatchers("/**");
+    private List<ClassListEnum> generateOrder(String difficulty) {
+        List<ClassListEnum> currList = new ArrayList<>();
+        int mobCount = 0;
+        switch(difficulty.toLowerCase()) {
+            case "easy":
+                mobCount = 2;
+                break;
+            case "medium":
+                mobCount = 3;
+                break;
+            case "hard":
+                mobCount = 4;
+                break;
         }
-    }
-
-    @Profile("default")
-    @Configuration
-    class SecurityConfig extends WebSecurityConfigurerAdapter {
-
-        @Override
-        protected void configure(HttpSecurity http) throws Exception {
-            http.authorizeRequests()
-                    .anyRequest().authenticated()
-                    .and()
-                    .oauth2ResourceServer().jwt();
+        for(int i = 0; i < mobCount; i++) {
+            Random random = new Random;
+            int rand = random.nextInt(3) + 1;
+            switch(rand) {
+                case 1:
+                    currList.add(ClassListEnum.Fighter);
+                    break;
+                case 2:
+                    currList.add(ClassListEnum.Ranger);
+                    break;
+                case 3:
+                    currList.add(ClassListEnum.Black_Mage);
+                    break;
+            }
         }
+        return currList;
     }
 
-    @Profile("default")
-    @Bean
-    public PermissionEvaluator permissionEvaluator() {
-        return new KeyCloakOAuthPermissionEvaluator();
+    @PostConstruct
+    public void defaultScoreBoard() {
+
     }
 
-    @Profile("default")
-    @EnableGlobalMethodSecurity(prePostEnabled = true)
-    @Configuration
-    class EvaluatorConfig extends GlobalMethodSecurityConfiguration {
-
-        @Override
-        protected MethodSecurityExpressionHandler createExpressionHandler() {
-            DefaultMethodSecurityExpressionHandler expressionHandler = new DefaultMethodSecurityExpressionHandler();
-            expressionHandler.setPermissionEvaluator(permissionEvaluator());
-            return expressionHandler;
-        }
-    }
 }

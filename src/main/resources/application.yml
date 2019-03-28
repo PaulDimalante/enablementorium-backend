@@ -1,54 +1,19 @@
-eureka:
-  client:
-    serviceUrl:
-      defaultZone: ${vcap.services.eureka.credentials.url:http://localhost:8761/eureka/}
-  instance:
-    leaseRenewalIntervalInSeconds: 10
-    hostname: ${vcap.application.uris[0]:localhost}
-    nonSecurePort: 80
-    securePort: 433
-    securePortEnabled: true
-    metadataMap:
-      instanceId: ${vcap.application.instance_id:${spring.application.name}:${spring.application.instance_id:80}}
-encryption:
-  key: test123456781234
-  iv: 87b7225d16ea2ae1f41d0b13fdce9bba
-  keystore:
-    password: Ilove2cod#
-  certificate:
-    password: Ilove2cod#
-    name: mykey
-
 spring:
-  rabbitmq:
-    host: localhost
-    port: 5672
-    username: testuser
-    password: welcome
-  security:
-    oauth2:
-      resourceserver:
-        jwt:
-          jwk-set-uri: https://keycloak.unreleased.work/auth/realms/oauth2-test/protocol/openid-connect/certs
-
-realm:
-  appName: test-app
-
----
-spring:
-  profiles: local
-  rabbitmq:
-    host: localhost
-    port: 5672
-    username: testuser
-    password: welcome
-  security:
-    user:
-      password: welcome1
-
+  profiles: local, test
+  datasource:
+    url: jdbc:h2:mem:testdb
+    driverClassName: org.h2.Driver
+    username: honeybadger
+    password: dontcare
+    jpa:
+      hibernate:
+        ddl-auto: create
+      properties:
+        hibernate:
+          show_sql: true
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
 server:
-  port: 9000
-eureka:
-  client:
-    register-with-eureka: false
-    enabled: false
+  port: 8082
