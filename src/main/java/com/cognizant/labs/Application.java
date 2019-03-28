@@ -7,6 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import javax.annotation.PostConstruct;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
@@ -19,17 +20,21 @@ public class Application {
 
     @PostConstruct
     public void saveMobOrders() {
-        MobOrder mobOrder1 = new MobOrder(1L, new ArrayList<>());
-        MobOrder mobOrder2 = new MobOrder(1L, new ArrayList<>());
-        MobOrder mobOrder3 = new MobOrder(1L, new ArrayList<>());
-        MobOrder mobOrder4 = new MobOrder(1L, new ArrayList<>());
-        MobOrder mobOrder5 = new MobOrder(1L, new ArrayList<>());
+        MobOrder mobOrder1 = new MobOrder(1L, new ArrayList<>(),"Easy");
+        MobOrder mobOrder2 = new MobOrder(2L, new ArrayList<>(),"Easy");
+        MobOrder mobOrder3 = new MobOrder(3L, new ArrayList<>(),"Easy");
+        MobOrder mobOrder4 = new MobOrder(4L, new ArrayList<>(),"Easy");
+        MobOrder mobOrder5 = new MobOrder(5L, new ArrayList<>(),"Easy");
 
-        mobOrder1.setOrderOfMobs(generateOrder("Easy"));
-        mobOrder2.setOrderOfMobs(generateOrder("Easy"));
-        mobOrder3.setOrderOfMobs(generateOrder("Easy"));
-        mobOrder4.setOrderOfMobs(generateOrder("Easy"));
-        mobOrder5.setOrderOfMobs(generateOrder("Easy"));
+        mobOrder1.setOrderOfMobs(generateOrder(mobOrder1.getDifficulty()));
+        mobOrder2.setOrderOfMobs(generateOrder(mobOrder2.getDifficulty()));
+        mobOrder3.setOrderOfMobs(generateOrder(mobOrder3.getDifficulty()));
+        mobOrder4.setOrderOfMobs(generateOrder(mobOrder4.getDifficulty()));
+        mobOrder5.setOrderOfMobs(generateOrder(mobOrder5.getDifficulty()));
+
+        List<MobOrder> easyDifficulty = new ArrayList<>();
+        easyDifficulty.addAll(Arrays.asList(mobOrder1, mobOrder2, mobOrder3, mobOrder4, mobOrder5));
+        easyDifficulty.forEach(mobOrder -> mobOrderService.createMobOrder(mobOrder));
 
 //        ArrayList<Location> locations = new ArrayList<>();
 //        locations.addAll(Arrays.asList(location1, location2, location3, location4, location5));

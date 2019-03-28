@@ -24,6 +24,8 @@ public class MobOrder {
 
     private List<ClassListEnum> orderOfMobs = new ArrayList<>();
 
+    private String difficulty;
+
 }
 
 
