@@ -1,7 +1,5 @@
 package com.cognizant.labs;
 
-import com.cognizant.labs.Enums.ClassListEnum;
-import com.cognizant.labs.models.MobOrder;
 import com.cognizant.labs.models.Scoreboard;
 import com.cognizant.labs.service.MobOrderService;
 import com.cognizant.labs.service.ScoreBoardService;
@@ -10,9 +8,6 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import javax.annotation.PostConstruct;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
 
 @SpringBootApplication
 public class Application {
