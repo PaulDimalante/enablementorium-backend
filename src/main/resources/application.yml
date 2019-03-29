@@ -11,9 +11,5 @@ spring:
       properties:
         hibernate:
           show_sql: true
-  h2:
-    console:
-      enabled: true
-      path: /h2-console
 server:
   port: 8082

@@ -7,8 +7,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -22,7 +20,13 @@ public class MobOrder {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    private List<ClassListEnum> orderOfMobs = new ArrayList<>();
+    private ClassListEnum mob1;
+
+    private ClassListEnum mob2;
+
+    private ClassListEnum mob3;
+
+    private ClassListEnum mob4;
 
     private String difficulty;
 
