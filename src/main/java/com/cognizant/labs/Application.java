@@ -1,93 +1,59 @@
 package com.cognizant.labs;
 
-import com.cognizant.labs.security.EncryptionUtil;
-import com.cognizant.labs.security.KeyCloakOAuthPermissionEvaluator;
-import org.springframework.beans.factory.annotation.Value;
+import com.cognizant.labs.Enums.ClassListEnum;
+import com.cognizant.labs.models.MobOrder;
+import com.cognizant.labs.models.Scoreboard;
+import com.cognizant.labs.service.MobOrderService;
+import com.cognizant.labs.service.ScoreBoardService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
-import org.springframework.security.access.PermissionEvaluator;
-import org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler;
-import org.springframework.security.access.expression.method.MethodSecurityExpressionHandler;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
-import org.springframework.security.config.annotation.method.configuration.GlobalMethodSecurityConfiguration;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+
+import javax.annotation.PostConstruct;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 @SpringBootApplication
 public class Application {
+
+    @Autowired
+    MobOrderService mobOrderService;
+
+    @Autowired
+    ScoreBoardService scoreBoardService;
 
     public static void main(String... args) {
         SpringApplication.run(Application.class,args);
     }
 
-    @Value("${encryption.key}")
-    private String key;
-
-    @Value("${encryption.iv}")
-    private String iv;
-
-    @Value("${encryption.keystore.password}")
-    private String keyStorePassword;
-
-    @Value("${encryption.certificate.password}")
-    private String certificatePassword;
-
-    @Value("${encryption.certificate.name}")
-    private String certificateName;
-
-    @Bean
-    public EncryptionUtil encryptionUtil() {
-        EncryptionUtil encryptionUtil = new EncryptionUtil();
-        EncryptionUtil.setCertificateName(certificateName);
-        EncryptionUtil.setCertificatePassword(certificatePassword);
-        EncryptionUtil.setKeyStorePassword(keyStorePassword);
-        //return
-        return encryptionUtil;
-    }
-
-    @Profile("local")
-    @Configuration
-    static class DisableSecurity extends WebSecurityConfigurerAdapter {
-
-        @Override
-        public void configure(WebSecurity web) throws Exception {
-            web.ignoring().antMatchers("/**");
+    @PostConstruct
+    public void setupMobOrderAndScoreboard() {
+        for(long i = 0; i < 15; i++){
+            if (0 <= i && i < 5) {
+                mobOrderService.createMobOrder("Easy");
+            }
+            else if (5 <= i && i < 10) {
+                mobOrderService.createMobOrder("Medium");
+            }
+            else if (10 <= i && i < 15) {
+                mobOrderService.createMobOrder("Hard");
+            }
         }
+
+        Scoreboard scoreboard1 = new Scoreboard(1L, 192L, "MikeANike", "Black Mage", "Hard");
+        Scoreboard scoreboard2 = new Scoreboard(2L, 20L, "Ade", "Fighter", "Easy");
+        Scoreboard scoreboard3 = new Scoreboard(3L, 121L, "Shariq", "Black Mage", "Medium");
+        Scoreboard scoreboard4 = new Scoreboard(4L, 221L, "Kat", "Ranger", "Hard");
+        Scoreboard scoreboard5 = new Scoreboard(5L, 90L, "Michael Da Underwood", "Fighter", "Medium");
+        Scoreboard scoreboard6 = new Scoreboard(6L, 270L, "Zaryn", "Black Mage", "Hard");
+
+        scoreBoardService.createScoreboard(scoreboard1);
+        scoreBoardService.createScoreboard(scoreboard2);
+        scoreBoardService.createScoreboard(scoreboard3);
+        scoreBoardService.createScoreboard(scoreboard4);
+        scoreBoardService.createScoreboard(scoreboard5);
+        scoreBoardService.createScoreboard(scoreboard6);
     }
 
-    @Profile("default")
-    @Configuration
-    class SecurityConfig extends WebSecurityConfigurerAdapter {
-
-        @Override
-        protected void configure(HttpSecurity http) throws Exception {
-            http.authorizeRequests()
-                    .anyRequest().authenticated()
-                    .and()
-                    .oauth2ResourceServer().jwt();
-        }
-    }
-
-    @Profile("default")
-    @Bean
-    public PermissionEvaluator permissionEvaluator() {
-        return new KeyCloakOAuthPermissionEvaluator();
-    }
-
-    @Profile("default")
-    @EnableGlobalMethodSecurity(prePostEnabled = true)
-    @Configuration
-    class EvaluatorConfig extends GlobalMethodSecurityConfiguration {
-
-        @Override
-        protected MethodSecurityExpressionHandler createExpressionHandler() {
-            DefaultMethodSecurityExpressionHandler expressionHandler = new DefaultMethodSecurityExpressionHandler();
-            expressionHandler.setPermissionEvaluator(permissionEvaluator());
-            return expressionHandler;
-        }
-    }
 }

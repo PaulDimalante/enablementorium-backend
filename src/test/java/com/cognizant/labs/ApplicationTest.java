@@ -1,15 +1,24 @@
 package com.cognizant.labs;
 
-import com.cognizant.labs.security.EncryptionUtil;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.ApplicationContext;
+import org.springframework.test.context.junit4.SpringRunner;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
+@RunWith(SpringRunner.class)
+@SpringBootTest
 public class ApplicationTest {
 
+    @Autowired
+    ApplicationContext context;
+
     @Test
-    public void encryptionUtil() {
-        EncryptionUtil encryptionUtil = new Application().encryptionUtil();
-        assertNotNull(encryptionUtil);
+    public void test(){
+        assertTrue(context.getBeanDefinitionCount() > 0);
     }
+
 }

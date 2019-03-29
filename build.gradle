@@ -1,19 +1,12 @@
 plugins {
     id 'java'
     id 'org.springframework.boot' version '2.1.1.RELEASE'
-    id "org.sonarqube" version "2.7"
-    id "com.github.pivotalservices.cf-app" version "2.3.0-rc.6"
-    id "org.owasp.dependencycheck" version "4.0.2"
 }
 
 apply plugin: 'java'
 apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
-apply plugin: 'jacoco'
-apply plugin: 'org.sonarqube'
 apply plugin: 'maven'
-apply plugin: 'org.owasp.dependencycheck'
-apply plugin: 'project-report'
 
 group 'com.cognizant.labs'
 version = project.properties.containsKey("releaseVersion") ? "${releaseVersion}" : "1.0-SNAPSHOT"
@@ -30,6 +23,8 @@ task integrationTest(type: Test) {
     include 'com/**/*IT*'
 }
 
+check.dependsOn("integrationTest")
+
 repositories {
     mavenCentral()
     maven {
@@ -43,73 +38,11 @@ dependencyManagement {
     }
 }
 
-jacoco {
-    toolVersion = '0.8.1'
-}
-
-//Sonar work #################################
-sonarqube {
-    properties {
-        property "sonar.jacoco.reportPaths", "${buildDir}/jacoco"
-    }
-}
-
-//Archive work #################################
-uploadArchives {
-    repositories {
-        mavenDeployer {
-            repository(url: "https://repository.unreleased.work/repository/maven-releases/") {
-                authentication(userName: "${nexusUsername}", password: "${nexusPassword}")
-            }
-            snapshotRepository(url: "https://repository.unreleased.work/repository/maven-snapshots/") {
-                authentication(userName: "${nexusUsername}", password: "${nexusPassword}")
-            }
-        }
-    }
-}
-
-uploadArchives.dependsOn tasks.bootJar
-
-
-//Cloudfoundry work #################################
-//settings
-cfConfig {
-    ccHost = "api.run.pivotal.io"
-    ccUser = project.getProperty('CF_USR')
-    ccPassword = project.getProperty('CF_PSW')
-    org = "cognizantlabs"
-    space = project.getProperty('CF_SPACE')
-    name = rootProject.name
-    filePath = "build/libs/" + bootJar.archiveName
-    path = ""
-    routes = [rootProject.name + ".cfapps.io"]
-    //config
-    instances = 1
-    memory = 1024
-    timeout = 180
-}
-
-
-"cf-push" { dependsOn "bootJar"}
-
-"cf-push-blue-green-1" { dependsOn "bootJar" finalizedBy "acceptanceTest" }
-
 dependencies {
-    compile 'org.springframework.boot:spring-boot-starter-actuator'
     compile 'org.springframework.boot:spring-boot-starter-data-jpa'
     compile 'org.springframework.boot:spring-boot-starter-data-rest'
-    compile 'org.springframework.boot:spring-boot-starter-security'
-    compile 'org.springframework.security:spring-security-oauth2-core'
-    compile 'org.springframework.security:spring-security-oauth2-client'
-    compile 'org.springframework.security:spring-security-oauth2-jose'
-    compile 'org.springframework.security:spring-security-oauth2-resource-server'
 
-    compile('org.springframework.cloud:spring-cloud-starter-netflix-eureka-client') {
-	    exclude group: 'org.springframework.security', module: 'spring-security-rsa'
-    }
-    compile 'com.google.guava:guava:25.0-jre'
-    compile 'com.sun.jersey.contribs:jersey-apache-client4:1.19.4'
-    compile 'org.springframework.hateoas:spring-hateoas'
+    compile group: 'org.projectlombok', name: 'lombok'
     //TODO dropped swagger on Spring Data due ot issues
 //    compile 'io.springfox:springfox-swagger2:3.0.0-SNAPSHOT'
 //    compile 'io.springfox:springfox-swagger-ui:3.0.0-SNAPSHOT'
@@ -117,21 +50,18 @@ dependencies {
     compile 'org.bouncycastle:bcpkix-jdk15on:1.60'
     compile 'com.fasterxml.jackson.core:jackson-databind:2.9.8'
     compile 'org.hsqldb:hsqldb'
-    //messaging
-    compile 'org.springframework.cloud:spring-cloud-starter-stream-rabbit'
+
+    implementation 'com.h2database:h2:1.4.197'
 
     testCompile 'org.mock-server:mockserver-netty:3.10.8'
     testCompile 'org.mock-server:mockserver-client-java:3.10.8'
     testCompile 'org.springframework.boot:spring-boot-starter-test'
-    testCompile 'org.springframework.security:spring-security-test'
     testCompile 'org.powermock:powermock-module-junit4:1.7.4'
     testCompile 'org.powermock:powermock-api-mockito2:1.7.4'
     testCompile 'org.mockito:mockito-core:2.23.4'
     testCompile 'org.apache.httpcomponents:httpclient'
 }
 
-dependencyCheck {
-    failBuildOnCVSS=1
-    cveValidForHours=1
-    suppressionFile='./cves/suppressions.xml'
+bootRun {
+    args = ["--spring.profiles.active=local"]
 }
