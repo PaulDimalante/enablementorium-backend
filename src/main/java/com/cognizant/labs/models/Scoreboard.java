@@ -26,5 +26,5 @@ public class Scoreboard {
 
     private String playersClass;
 
-    private String currentDifficulty;
+    private String difficulty;
 }
