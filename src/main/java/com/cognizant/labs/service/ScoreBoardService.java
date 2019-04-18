@@ -5,6 +5,8 @@ import com.cognizant.labs.repository.ScoreboardRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,7 +24,9 @@ public class ScoreBoardService {
         return currScoreboard.orElse(null);
     }
     public List<Scoreboard> findAll() {
-        return scoreboardRepository.findAll();
+        List<Scoreboard> orderedScores = scoreboardRepository.findAll();
+        Collections.sort(orderedScores, Comparator.comparingLong(Scoreboard::getPlayersScore).reversed());
+        return orderedScores;
     }
     public Scoreboard updateScoreboard(Scoreboard scoreboard) {
         if(findById(scoreboard.getId()) == null) {

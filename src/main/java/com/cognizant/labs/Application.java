@@ -42,6 +42,7 @@ public class Application {
         Scoreboard scoreboard4 = new Scoreboard(4L, 221L, "Kat", "Ranger", "Hard");
         Scoreboard scoreboard5 = new Scoreboard(5L, 90L, "Michael Da Underwood", "Fighter", "Medium");
         Scoreboard scoreboard6 = new Scoreboard(6L, 270L, "Zaryn", "Black Mage", "Hard");
+        Scoreboard scoreboard7 = new Scoreboard(7L, 684L, "jvalencia", "Ranger", "Medium");
 
         scoreBoardService.createScoreboard(scoreboard1);
         scoreBoardService.createScoreboard(scoreboard2);
@@ -49,6 +50,7 @@ public class Application {
         scoreBoardService.createScoreboard(scoreboard4);
         scoreBoardService.createScoreboard(scoreboard5);
         scoreBoardService.createScoreboard(scoreboard6);
+        scoreBoardService.createScoreboard(scoreboard7);
     }
 
 }
