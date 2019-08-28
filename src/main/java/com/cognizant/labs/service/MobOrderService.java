@@ -28,6 +28,7 @@ public class MobOrderService {
                 List<ClassListEnum> mobOrder1 = generateOrder(difficulty);
                 currMobOrder = new MobOrder(null, mobOrder1.get(0), mobOrder1.get(1), ClassListEnum.None, ClassListEnum.None, "Easy");
                 break;
+
             case "medium":
                 List<ClassListEnum> mobOrder2 = generateOrder(difficulty);
                 currMobOrder = new MobOrder(null, mobOrder2.get(0), mobOrder2.get(1), mobOrder2.get(2), ClassListEnum.None, "Medium");

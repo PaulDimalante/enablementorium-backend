@@ -9,8 +9,8 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
+//@AllArgsConstructor
+//@NoArgsConstructor
 @Builder
 @Entity(name="mobOrder")
 @Table(name = "mob_order")
@@ -30,6 +30,21 @@ public class MobOrder {
 
     private String difficulty;
 
+    public MobOrder(Long id, ClassListEnum mob1, ClassListEnum mob2, ClassListEnum mob3, ClassListEnum mob4, String difficulty) {
+        this.mob1 = mob1;
+        this.mob2 = mob2;
+        this.mob3 = mob3;
+        this.mob4 = mob4;
+        this.difficulty = difficulty;
+    }
+
+    public MobOrder() {
+
+    }
+
+    public Long getId() {
+        return this.id;
+    }
 }
 
 
