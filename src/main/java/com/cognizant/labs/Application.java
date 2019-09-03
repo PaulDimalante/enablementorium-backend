@@ -36,7 +36,7 @@ public class Application {
             }
         }
 
-        Scoreboard scoreboard1 = new Scoreboard(1L, 192L, "MikeANike", "Black Mage", "Hard");
+        Scoreboard scoreboard1 = new Scoreboard(1L, 192L, "enablementorium", "Black Mage", "Hard");
         Scoreboard scoreboard2 = new Scoreboard(2L, 20L, "Ade", "Fighter", "Easy");
         Scoreboard scoreboard3 = new Scoreboard(3L, 121L, "Shariq", "Black Mage", "Medium");
         Scoreboard scoreboard4 = new Scoreboard(4L, 221L, "Kat", "Ranger", "Hard");

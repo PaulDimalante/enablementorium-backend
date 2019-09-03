@@ -1,4 +1,4 @@
 applications:
-- name: mikeanike-backend
-  path: build/libs/mikeanike-backend-1.0-SNAPSHOT.jar
+- name: enablementorium-backend
+  path: build/libs/enablementorium-backend-1.0-SNAPSHOT.jar
   instances: 1
